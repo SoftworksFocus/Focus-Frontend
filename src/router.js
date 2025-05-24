@@ -1,6 +1,7 @@
 import PagInicial from './components/PagInicial.vue'
 import Cadastro from './components/Cadastro.vue'
 import Login from './components/Login.vue'
+import Perfil from './components/Perfil.vue'
 import{createRouter, createWebHistory} from 'vue-router'
 
 const routes=[
@@ -15,6 +16,10 @@ const routes=[
     {name:Login,
     component:Login,
     path:'/Login'
+    },
+    {name:Perfil,
+    component:Perfil,
+    path:'/Perfil'    
     }
 ];
 const router =createRouter({

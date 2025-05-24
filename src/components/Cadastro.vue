@@ -1,16 +1,44 @@
 <template>
+    <button v-on:click="voltar()">Voltar</button>
     <h1>Cadastro</h1>
     <div class="Cadastre-se">
         <input type="text" placeholder="Crie seu username"/>
         <input type="text" placeholder="Coloque seu e-mail"/>
         <input type="password" placeholder="Crie sua senha"/>
-        <button >Cadastre-se</button>
+        <button v-on:click="Login()" >Cadastre-se</button>
     </div>
 </template>
 
 <script>
+import Login from './Login.vue'
+import PagInicial from './PagInicial.vue' 
 export default{
-    name : 'Cadastro',}
+    name : 'Cadastro', 
+    methods:{
+        voltar(){
+            this.$router.push({name:PagInicial})
+        },
+        Login(){
+            this.$router.push({name:Login})
+        }
+    }
+}
+/*data(){
+        username:'',
+        email:'',
+        senha:''
+    },
+    methods:{
+        cadastreSe(){
+            if(this.username.trim == '' || this.email.trim == '' || this.senha.trim == ''){
+
+            }
+            else{
+
+            }
+        }
+    }
+
     /*data(){
         username:'',
         email:'',

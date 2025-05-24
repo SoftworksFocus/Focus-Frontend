@@ -7,7 +7,7 @@
 import Cadastro from './Cadastro.vue'
 import Login from './Login.vue'
 export default{
-    name : 'PagIncial',
+    name : 'PagInicial',
 
 methods:{
     cadastro(){
