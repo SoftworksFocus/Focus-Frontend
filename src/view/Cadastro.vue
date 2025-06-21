@@ -44,7 +44,7 @@ export default{
                 this.novoEmail = "";
                 this.novoUsername = "";
             }    
-        }
+        },
     }
 }
 </script>

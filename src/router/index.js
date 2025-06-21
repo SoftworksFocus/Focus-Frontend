@@ -1,8 +1,10 @@
-import PagInicial from './components/PagInicial.vue'
-import Cadastro from './components/Cadastro.vue'
-import Login from './components/Login.vue'
-import Perfil from './components/Perfil.vue'
+import PagInicial from '../view/PagInicial.vue'
+import Cadastro from '../view/Cadastro.vue'
+import Login from '../view/Login.vue'
+import Perfil from '../view/Perfil.vue'
+import Homepage from '../view/Homepage.vue'
 import{createRouter, createWebHistory} from 'vue-router'
+
 
 const routes=[
     {name:PagInicial,
@@ -20,7 +22,11 @@ const routes=[
     {name:Perfil,
     component:Perfil,
     path:'/Perfil'    
-    }
+    },
+    {name:Homepage,
+    component:Homepage,
+    path:'/homepage'    
+    },
 ];
 const router =createRouter({
     history:createWebHistory(),

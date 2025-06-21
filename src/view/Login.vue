@@ -4,22 +4,22 @@
     <div class="login">
         <input type="text" placeholder="Coloque seu e-mail"/>
         <input type="password" placeholder="Crie sua senha"/>
-        <button v-on:click="Perfil()">Login</button>
+        <button v-on:click="Homepage()">Login</button>
         <button class="link" v-on:click="kkkk">esqueceu sua senha?</button>
     </div>
 </template>
 
 <script>
 import PagInicial from './PagInicial.vue' 
-import Perfil from './Perfil.vue'
+import Homepage from './Homepage.vue'
 export default{
     name : 'Login',
     methods:{
         voltar(){
             this.$router.push({name:PagInicial})
         },
-        Perfil(){
-            this.$router.push({name:Perfil})
+        Homepage(){
+            this.$router.push({name:Homepage})
         }
     }
 }

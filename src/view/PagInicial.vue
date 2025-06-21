@@ -4,7 +4,7 @@
 <button v-on:click="login()">Login</button>
 </template>
 <script>
-import Cadastro from './Cadastro.vue'
+import Cadastro from '../view/Cadastro.vue'
 import Login from './Login.vue'
 export default{
     name : 'PagInicial',
