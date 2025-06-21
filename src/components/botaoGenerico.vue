@@ -23,9 +23,9 @@ export default{
         ativo:{
           type:Boolean,
         },
-        post:{
+        click:{
           type:Boolean,
-        }
+        },
     },
 }
 </script>

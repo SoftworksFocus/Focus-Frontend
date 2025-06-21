@@ -5,13 +5,14 @@
         <input type="text" placeholder="Coloque seu e-mail"/>
         <input type="password" placeholder="Crie sua senha"/>
         <button v-on:click="Homepage()">Login</button>
-        <button class="link" v-on:click="kkkk">esqueceu sua senha?</button>
+        <button class="link" @click="RecSenha">esqueceu sua senha?</button>
     </div>
 </template>
 
 <script>
 import PagInicial from './PagInicial.vue' 
 import Homepage from './Homepage.vue'
+import RecSenha from './RecSenha.vue'
 export default{
     name : 'Login',
     methods:{
@@ -20,6 +21,9 @@ export default{
         },
         Homepage(){
             this.$router.push({name:Homepage})
+        },
+        RecSenha(){
+            this.$router.push({name:RecSenha})
         }
     }
 }
