@@ -4,7 +4,7 @@
       <input type="checkbox" v-model="isDark" @change="toggleTheme"/>
       <span class="slider round"></span>
     </label>
-    <span>{{ isDarkTheme ? 'Modo Escuro' : 'Modo Claro' }}</span>
+    <span>{{ isDark ? 'Modo Escuro' : 'Modo Claro' }}</span>
   </div>
 </template>
 
@@ -18,17 +18,19 @@ export default{
     },
     methods:{
         applyTheme(){
-        if (this.isDarkTheme) {
+        if (this.isDark) {
             document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
         } else {
             document.body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light'); 
         }
+        console.log("applytheme ativado")
     },
     toggleTheme(){
             this.isDark = !this.isDark;
             this.applyTheme();
+            console.log("toggletheme ativado")
         },
 }
 }

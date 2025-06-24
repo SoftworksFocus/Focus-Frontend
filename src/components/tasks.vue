@@ -58,20 +58,23 @@ export default {
   align-items: center;
   justify-content: space-between; 
   padding: 8px 0;
-  border-bottom: 1px dashed #eee;
+  border-bottom: 1px dashed var(--border-color); 
+  background-color: var(--task-item-bg); 
+  color: var(--text-color); 
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 .task-item:last-child {
   border-bottom: none;
 }
 .task-completed {
   text-decoration: line-through;
-  color: #888;
+  color: var(--completed-task-color); 
 }
 .task-dates {
   display: flex;
   flex-direction: column;
   font-size: 0.75em;
-  color: #666;
+  color: var(--text-color-secondary); 
   text-align: right;
   min-width: 120px; 
 }

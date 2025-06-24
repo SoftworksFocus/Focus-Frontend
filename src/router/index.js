@@ -21,7 +21,7 @@ const routes=[
     },
     {name:Login,
     component:Login,
-    path:'login'
+    path:'/login'
     },
     {name:Perfil,
     component:Perfil,

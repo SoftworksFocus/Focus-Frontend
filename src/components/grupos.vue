@@ -1,5 +1,5 @@
 <template>
-  <Card class="group-card">
+   <Card class="group-card">
     <template #header>
       <div class="group-header">
         <img :src="group.imageUrl" :alt="group.name" class="group-image" v-if="group.imageUrl" />
@@ -74,26 +74,26 @@ export default {
 
 .group-name {
   font-size: 1.6em;
-  color: #2c3e50;
+  color: var(--text-color); 
   margin: 0;
 }
 
 .task-list {
   margin-top: 15px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
   padding-top: 15px;
 }
 
 .task-list h4 {
   font-size: 1.2em;
-  color: #4a4a4a;
+  color: var(--text-color-secondary); 
   margin-top: 0;
   margin-bottom: 10px;
 }
 
 .no-tasks-message {
   font-style: italic;
-  color: #777;
+  color: var(--text-color-secondary); 
   text-align: center;
   padding: 10px 0;
 }

@@ -1,19 +1,30 @@
 <template>
-    <botaoGenerico click="sidebar" @toggleBusca="Sidebar" class="btn"/>
-    <div v-if="sidebar">
-      <button @click="Perfil" src="data:image/png;base64,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"></button>
-      <button @click="Config"></button>
+<div class="homepage-container">
+    <botaoGenerico click="sidebar" @toggleBusca="Sidebar" class="sidebar-toggle-btn">
+    <img v-if="!sidebar" src="@/assets/menu_icon.png" alt="Menu" class="icon-menu"/>
+    <img v-else src="@/assets/X_icon.png" alt="Fechar Menu" class="icon-close"/>
+    </botaoGenerico>
+    <div v-if="sidebar" class="sidebar">
+      <button @click="Perfil" class="sidebar-btn">
+        <img src="@/assets/icon.png" alt="Perfil" class="icon-sidebar">
+        Perfil
+      </button>
+      <button @click="Config" class="sidebar-btn">
+        <img src="@/assets/config_icon.png" alt="Configurações" class="icon-sidebar">
+        Configurações
+      </button>
       </div>
-    <div>
-        <botaoGenerico ativo="buscaAtiva" @toggleBusca="alternarBusca"/>
+    <div class="search-section">
+        <botaoGenerico ativo="buscaAtiva" @toggleBusca="alternarBusca" class="search-toggle-btn"/>
         <input
         v-if="buscaAtiva"
         type="text"
         placeholder="Digite sua busca..."
         v-model="textoBusca"
+        class="search-input"
         />
     </div>
-    <div>
+    <div class="groups-section">
           <Grupos 
           v-for="group in groups" 
           :key="group.id" 
@@ -21,23 +32,32 @@
           @toggle-group-task="handleToggleTask"
         />
     </div>
-    <div>
-        <botaoGenerico click="criarPost" @toggleBusca="alternarPost"/>
-        <div v-if="criarPost">
-            <button src="@/assets/X_icon.png" @click="alternarPost"></button>
+    <div class="post-creation-section">
+        <botaoGenerico click="criarPost" @toggleBusca="alternarPost" class="create-post-btn">
+          <img v-if="!criarPost" src="@/assets/plus_icon.png" alt="Criar Post" class="icon-post"/>
+          <img v-else src="@/assets/X_icon.png" alt="Fechar Post" class="icon-post"/>
+        </botaoGenerico>
+        <div v-if="criarPost" class="post-form">
+            <button @click="alternarPost" class="close-post-btn">
+              <img src="@/assets/X_icon.png">
+            </button>
             <h3>O que você está pensando?</h3>
-            <input v-model="textoPost" type="text" placeholder="Escreva aqui sua postagem"/>
-            <button @click="imagem" src="placeholder"></button>
-            <button>Salvar rascunho</button>
-            <button>Enviar</button>
+            <input v-model="textoPost" type="text" placeholder="Escreva aqui sua postagem" class="post-input"/>
+            <button @click="imagem"  alt="Adicionar Imagem" class="icon-add-image">
+              <img src="@/assets/image_icon.png">
+            </button>
+            <button class="btn-default">Salvar rascunho</button>
+            <button class="btn-primary">Enviar</button>
         </div>
     </div>
+</div>
 </template>
 
 <script>
 import botaoGenerico from '../components/botaoGenerico.vue';
 import Perfil from './Perfil.vue';
-import Grupos from '../components/grupos.vue'
+import Grupos from '../components/grupos.vue';
+import Config from './Config.vue';
 export default{
     components:{
         botaoGenerico,
@@ -95,6 +115,9 @@ export default{
         Perfil(){
             this.$router.push({name:Perfil})
         },
+        Config(){
+          this.$router.push({name:Config})
+        },
          handleToggleTask({ groupId, taskId, newStatus }) {
             const group = this.groups.find(g => g.id === groupId);
       if (group) {
@@ -115,8 +138,245 @@ export default{
 </script>
 
 <style scoped>
-.btn{
-  margin:20px;
-  background:blue;
+.homepage-container {
+    padding: 20px;
+    background-color: var(--body-bg); 
+    color: var(--text-color); 
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-toggle-btn {
+    position: fixed; 
+    top: 20px;
+    left: 20px;
+    z-index: 1000; 
+    background-color: var(--button-default-bg); 
+    border: 1px solid var(--border-color); 
+    border-radius: 50%; 
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.sidebar-toggle-btn:hover {
+    transform: scale(1.05);
+}
+.icon-menu, .icon-close {
+    width: 24px;
+    height: 24px;
+    filter: invert(var(--icon-filter-invert, 0)); 
+    transition: filter 0.3s ease;
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: var(--header-bg); 
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2); 
+    padding-top: 70px; 
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-btn {
+    width: calc(100% - 40px); 
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1.1em;
+    color: var(--text-color); 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.sidebar-btn:hover {
+    background-color: var(--button-default-bg); 
+}
+.icon-sidebar {
+    width: 20px;
+    height: 20px;
+    filter: invert(var(--icon-filter-invert, 0));
+}
+
+.search-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.search-toggle-btn {
+    background-color: var(--button-default-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: var(--button-text-color);
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.search-toggle-btn:hover {
+    filter: brightness(0.9);
+}
+.search-input {
+    width: 250px;
+    height: 35px;
+    padding-left: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--body-bg);
+    color: var(--text-color); 
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.search-input::placeholder {
+    color: var(--text-color-secondary);
+}
+
+
+.groups-section {
+    margin-bottom: 40px;
+}
+
+
+.post-creation-section {
+    text-align: center;
+    margin-top: 50px;
+}
+.create-post-btn {
+    background-color: var(--button-primary-bg); 
+    color: var(--button-primary-text-color);
+    border: 1px solid var(--button-primary-bg);
+    border-radius: 50%; 
+    width: 60px;
+    height: 60px;
+    font-size: 2em;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.create-post-btn:hover {
+    transform: scale(1.05);
+}
+.icon-post {
+    width: 30px;
+    height: 30px;
+    filter: invert(var(--icon-filter-invert-light, 1)); 
+    transition: filter 0.3s ease;
+}
+
+
+.post-form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.close-post-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-close-form {
+    width: 20px;
+    height: 20px;
+    filter: invert(var(--icon-filter-invert, 0)); 
+}
+
+.post-form h3 {
+    color: var(--text-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.post-input {
+    width: calc(100% - 40px);
+    height: 80px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--body-bg); 
+    color: var(--text-color);
+    resize: vertical;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.post-input::placeholder {
+    color: var(--text-color-secondary);
+}
+
+.add-image-btn {
+    background-color: var(--button-default-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 8px 15px;
+    color: var(--button-text-color);
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.add-image-btn:hover {
+    filter: brightness(0.9);
+}
+.icon-add-image {
+    width: 20px;
+    height: 20px;
+    filter: invert(var(--icon-filter-invert, 0));
+}
+
+.post-actions button {
+    margin: 0 10px;
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.post-actions .btn-default {
+    background-color: var(--button-default-bg);
+    color: var(--button-text-color);
+    border: 1px solid var(--border-color);
+}
+.post-actions .btn-primary {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text-color);
+    border: 1px solid var(--button-primary-bg);
+}
+.post-actions button:hover {
+    filter: brightness(0.9);
 }
 </style>

@@ -5,7 +5,8 @@
       :checked="modelValue" 
       @change="$emit('update:modelValue', $event.target.checked)" 
     />
-    <slot></slot> </label>
+    <slot></slot> 
+  </label>
 </template>
 
 <script>
@@ -25,6 +26,7 @@ export default {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  color: var(--text-color); 
 }
 .checkbox-wrapper input[type="checkbox"] {
   margin-right: 5px;

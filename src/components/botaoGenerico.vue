@@ -1,16 +1,6 @@
 <template>
-    <div>
-    <button class="['btn', tipo]" @click="$emit('toggleBusca')"> 
-      <img 
-        src="@/assets/lupa_v1.png" 
-        alt="Buscar"
-        :class="{ 'hidden-image': !ativo}"
-      />
-      <img 
-        src="@/assets/X_icon.png"
-        alt="Fechar"
-        :class="{ 'hidden-image': ativo}"
-      />
+   <div>
+    <button class="generico-btn" @click="$emit('toggleBusca')"> 
     </button>
 
     </div>
@@ -30,19 +20,30 @@ export default{
 }
 </script>
 <style scoped>
+.generico-btn {
+  
+  background-color: var(--button-default-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 8px; 
+  cursor: pointer;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.generico-btn:hover {
+  filter: brightness(0.9);
+}
+
+.generico-btn img {
+  width: 30px; 
+  height: 30px;
+  filter: invert(var(--icon-filter-invert, 0)); 
 
 .hidden-image {
-  display: none !important;
+  display: none !important; 
 }
-button img {
-  width: 30px !important;   
-  height: 30px !important;  
-  display: block !important;
-  opacity: 1 !important;   
-  border: 2px solid purple !important; 
 }
- button{
-    border: 1px solid red; background: yellow;
-    position: relative;
-    }
 </style>
