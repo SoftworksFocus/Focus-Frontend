@@ -1,5 +1,6 @@
 <template>
     <div class="credentials-change-container">
+        <button class="btn-voltar" @click="Voltar">Voltar</button>
         <h3 class="change-title">Mudança de credenciais</h3>
         <span>digite seu novo e-mail</span>
         <input type="text" placeholder="usuario@gmail.com" class="change-input"/>
@@ -10,9 +11,15 @@
 </template>
 
 <script>
+import Config from './Config.vue';
     export default{
         name:'MudEmail',
+        methods:{
+            Voltar(){
+             this.$router.push({name:Config})
+            }
     }
+}
 </script>
 
 <style scoped>
@@ -72,6 +79,20 @@
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .btn-primary:hover {
+    filter: brightness(0.9);
+}
+.btn-voltar {
+    width: 100px;
+    height: 30px;
+    border-radius: 16px;
+    color: var(--button-text-color); 
+    background: var(--button-default-bg); 
+    border: 1px solid var(--border-color); 
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.btn-voltar:hover {
     filter: brightness(0.9);
 }
 </style>

@@ -2,16 +2,22 @@
     <div class="recovery-container">
         <h3 class="recovery-title">Digite o email da sua conta para confirmar sua identidade:</h3>
         <input type="text" placeholder="digite seu e-mail" class="recovery-input" v-model="input_rec"/>
-        <button class="btn-primary">Confirmar</button>
+        <button class="btn-primary" @click="Confirmar">Confirmar</button>
     </div>
 </template>
 
 <script>
+import Login from './Login.vue';
     export default{
         name:'RecSenha',
         data(){
             return{
                 input_rec:""
+            }
+        },
+        methods:{
+            Confirmar(){
+             this.$router.push({name:Login})
             }
         }
     }

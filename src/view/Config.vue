@@ -1,5 +1,6 @@
 <template>
 <div class="config-container">
+    <button @click="Voltar" class="btn-voltar">Voltar</button>
     <h3 class="config-section-title">Privacidade e Segurança</h3>
     <div class="config-buttons-group">
         <button @click="MudEmail" class="btn-config">Mudar Email</button>
@@ -17,6 +18,7 @@
 import themeCheckbox from '@/components/themeCheckbox.vue';
 import MudEmail from './MudEmail.vue';
 import MudSenha from './MudSenha.vue';
+import Homepage from './Homepage.vue';
 export default{
     name:'Config',
     components:{themeCheckbox,},
@@ -31,6 +33,9 @@ export default{
         },
         MudSenha(){
             this.$router.push({name:MudSenha})
+        },
+        Voltar(){
+            this.$router.push({name:Homepage})
         },
     }
 
@@ -98,4 +103,19 @@ export default{
     font-weight: bold;
     color: var(--text-color); 
 }
+.btn-voltar {
+    width: 100px;
+    height: 30px;
+    border-radius: 16px;
+    color: var(--button-text-color); 
+    background: var(--button-default-bg); 
+    border: 1px solid var(--border-color); 
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.btn-voltar:hover {
+    filter: brightness(0.9);
+}
+
 </style>

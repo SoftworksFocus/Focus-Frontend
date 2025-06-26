@@ -1,6 +1,7 @@
 <template>
    <div>
-    <button class="generico-btn" @click="$emit('toggleBusca')"> 
+    <button class="generico-btn" @click="$emit('toggle')">
+      <slot></slot> 
     </button>
 
     </div>

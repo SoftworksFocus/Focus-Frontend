@@ -25,7 +25,7 @@ const routes=[
     },
     {name:Perfil,
     component:Perfil,
-    path:'/perfil'    
+    path:'/Perfil'    
     },
     {name:Homepage,
     component:Homepage,

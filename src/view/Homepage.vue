@@ -1,8 +1,8 @@
 <template>
 <div class="homepage-container">
-    <botaoGenerico click="sidebar" @toggleBusca="Sidebar" class="sidebar-toggle-btn">
-    <img v-if="!sidebar" src="@/assets/menu_icon.png" alt="Menu" class="icon-menu"/>
-    <img v-else src="@/assets/X_icon.png" alt="Fechar Menu" class="icon-close"/>
+    <botaoGenerico click="sidebar" @toggle="Sidebar" class="sidebar-toggle-btn">
+    <img v-if="!sidebar" :src="require('@/assets/menu_icon.png')" alt="Menu" class="icon-menu"/>
+    <img v-else :src="require('@/assets/X_icon.png')" alt="Fechar Menu" class="icon-close"/>
     </botaoGenerico>
     <div v-if="sidebar" class="sidebar">
       <button @click="Perfil" class="sidebar-btn">
@@ -15,7 +15,10 @@
       </button>
       </div>
     <div class="search-section">
-        <botaoGenerico ativo="buscaAtiva" @toggleBusca="alternarBusca" class="search-toggle-btn"/>
+        <botaoGenerico click="buscaAtiva" @toggle="alternarBusca" class="search-toggle-btn">
+          <img v-if="!buscaAtiva" :src="require('@/assets/lupa_v1.webp')" alt="abrir search" class="search-icon"/>
+          <img v-else :src="require('@/assets/X_icon.png')" alt="Fechar search" class="icon-close"/>
+        </botaoGenerico>
         <input
         v-if="buscaAtiva"
         type="text"
@@ -33,10 +36,11 @@
         />
     </div>
     <div class="post-creation-section">
-        <botaoGenerico click="criarPost" @toggleBusca="alternarPost" class="create-post-btn">
-          <img v-if="!criarPost" src="@/assets/plus_icon.png" alt="Criar Post" class="icon-post"/>
-          <img v-else src="@/assets/X_icon.png" alt="Fechar Post" class="icon-post"/>
-        </botaoGenerico>
+        <div class="fixed-post-button-container">
+      <botaoGenerico click="criarPost" @toggle="alternarPost" class="create-post-btn">
+        <img v-if="!criarPost" :src="require('@/assets/plus_icon.png')" alt="Criar Post" class="icon-post" />
+      </botaoGenerico>
+    </div>
         <div v-if="criarPost" class="post-form">
             <button @click="alternarPost" class="close-post-btn">
               <img src="@/assets/X_icon.png">
@@ -259,8 +263,14 @@ export default{
     text-align: center;
     margin-top: 50px;
 }
+.fixed-post-button-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 900; 
+}
 .create-post-btn {
-    background-color: var(--button-primary-bg); 
+    background-color: var(--button-default-bg); 
     color: var(--button-primary-text-color);
     border: 1px solid var(--button-primary-bg);
     border-radius: 50%; 
@@ -279,22 +289,27 @@ export default{
 .icon-post {
     width: 30px;
     height: 30px;
-    filter: invert(var(--icon-filter-invert-light, 1)); 
+    filter:none; 
     transition: filter 0.3s ease;
 }
 
 
 .post-form {
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    position: relative;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 500px;
+  width: 90%; 
+  margin: 0; 
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  z-index: 1001; 
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-.close-post-btn {
+.close-post-btn img{
     position: absolute;
     top: 10px;
     right: 10px;
@@ -306,6 +321,8 @@ export default{
     display: flex;
     align-items: center;
     justify-content: center;
+    border-color:none;
+    background-color: none;
 }
 .icon-close-form {
     width: 20px;
@@ -347,13 +364,14 @@ export default{
     align-items: center;
     gap: 5px;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    width:25px;
 }
 .add-image-btn:hover {
     filter: brightness(0.9);
 }
-.icon-add-image {
-    width: 20px;
-    height: 20px;
+.icon-add-image img{
+    width: 25px;
+    height: 25px;
     filter: invert(var(--icon-filter-invert, 0));
 }
 
@@ -379,4 +397,15 @@ export default{
 .post-actions button:hover {
     filter: brightness(0.9);
 }
+.search-icon{
+  width: 20px;
+    height: 20px;
+    filter: invert(var(--icon-filter-invert, 0));
+}
+.icon-close{
+ width: 20px;
+  height: 20px;
+  filter: invert(var(--icon-filter-invert, 0));
+}
+
 </style>
