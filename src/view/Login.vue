@@ -2,10 +2,11 @@
     <button v-on:click="voltar()" class="btn-voltar">Voltar</button>
     <h1 class="login-title">Login</h1>
     <div class="login-container">
-        <input type="text" placeholder="Coloque seu e-mail"/>
-        <input type="password" placeholder="Crie sua senha"/>
-        <button v-on:click="Homepage()" class="btn-login">Login</button>
+        <input type="text" placeholder="Coloque seu e-mail" v-model="email"/>
+        <input type="password" placeholder="Crie sua senha" v-model="password"/>
+        <button v-on:click="autenticar()" class="btn-login">Login</button>
         <button class="link-forgot-password" @click="RecSenha">esqueceu sua senha?</button>
+        <p v-if="erro"> {{ erro }}</p>
     </div>
 </template>
 
@@ -13,18 +14,37 @@
 import PagInicial from './PagInicial.vue' 
 import Homepage from './Homepage.vue'
 import RecSenha from './RecSenha.vue'
+import axios from 'axios'
 export default{
     name : 'Login',
+    data(){
+        return{
+        email:'',
+        password:'',
+        erro:'',
+    }
+},
     methods:{
         voltar(){
             this.$router.push({name:PagInicial})
         },
-        Homepage(){
-            this.$router.push({name:Homepage})
-        },
         RecSenha(){
             this.$router.push({name:RecSenha})
+        },
+        async autenticar(){
+        try{
+            const response = await axios.post('http://localhost:5135/api/Auth/login',{
+             email: this.email,
+             password: this.password,
+            });
+            const token = response.data.accessToken;
+            console.log(token);
+            localStorage.setItem('authToken', token);
+            this.$router.push({name:Homepage});
+        }catch(error){
+            this.erro = 'Login falhou:' + (error.response?.data?.message || error.message);
         }
+    }
     }
 }
 </script>

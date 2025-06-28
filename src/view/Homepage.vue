@@ -27,13 +27,8 @@
         class="search-input"
         />
     </div>
-    <div class="groups-section">
-          <Grupos 
-          v-for="group in groups" 
-          :key="group.id" 
-          :group="group" 
-          @toggle-group-task="handleToggleTask"
-        />
+    <div class="Feed-section">
+          <Feed />
     </div>
     <div class="post-creation-section">
         <div class="fixed-post-button-container">
@@ -60,12 +55,12 @@
 <script>
 import botaoGenerico from '../components/botaoGenerico.vue';
 import Perfil from './Perfil.vue';
-import Grupos from '../components/grupos.vue';
+import Feed from '../components/feed.vue';
 import Config from './Config.vue';
 export default{
     components:{
         botaoGenerico,
-        Grupos,
+        Feed,
     },
     data(){
         return{
@@ -74,44 +69,14 @@ export default{
             criarPost:false,
             buscaAtiva:false,
             textoBusca:"",
-      groups: [
-        {
-          id: 'proj-arquitetura',
-          name: 'Projeto de Arquitetura da Casa',
-          imageUrl: 'https://via.placeholder.com/400x250/3498db/FFFFFF?text=Casa+Design',
-          tasks: [
-            { id: 'arc1', descricao: 'Reunião com cliente', concluida: false, dataInicio: '2025-06-25T10:00:00', dataFim: '2025-06-25T11:00:00' },
-            { id: 'arc2', descricao: 'Criar plantas baixas', concluida: false, dataInicio: '2025-06-26T09:00:00', dataFim: '2025-06-28T17:00:00' },
-            { id: 'arc3', descricao: 'Definir materiais', concluida: true, dataInicio: '2025-06-20T14:00:00', dataFim: '2025-06-20T16:00:00' },
-          ],
-        },
-        {
-          id: 'desenvolvimento-app',
-          name: 'Desenvolvimento do App Mobile',
-          imageUrl: 'https://via.placeholder.com/400x250/2ecc71/FFFFFF?text=App+Dev',
-          tasks: [
-            { id: 'app1', descricao: 'Especificar funcionalidades', concluida: true, dataInicio: '2025-06-15T09:00:00', dataFim: '2025-06-17T17:00:00' },
-            { id: 'app2', descricao: 'Prototipar UI/UX', concluida: false, dataInicio: '2025-06-22T09:00:00', dataFim: '2025-06-24T17:00:00' },
-          ],
-        },
-        {
-          id: 'marketing-campanha',
-          name: 'Campanha de Marketing',
-          imageUrl: 'https://via.placeholder.com/400x250/e74c3c/FFFFFF?text=Marketing',
-          tasks: [
-            { id: 'mkt1', descricao: 'Pesquisa de mercado', concluida: false, dataInicio: '2025-07-01T09:00:00', dataFim: '2025-07-05T17:00:00' },
-            { id: 'mkt2', descricao: 'Criar copy para anúncios', concluida: false, dataInicio: '2025-07-06T09:00:00', dataFim: '2025-07-07T17:00:00' },
-            { id: 'mkt3', descricao: 'Lançar campanha', concluida: false, dataInicio: '2025-07-10T10:00:00', dataFim: '2025-07-10T11:00:00' },
-          ],
-        },
-      ],
+
+      atividade: [],
 
     }
     },
     methods:{
         alternarBusca() {
         this.buscaAtiva = !this.buscaAtiva;
-        console.log('Valor de minhaBuscaEstaAtiva:', this.buscaAtiva);
         },
         alternarPost(){
             this.criarPost = !this.criarPost;
@@ -254,7 +219,7 @@ export default{
 }
 
 
-.groups-section {
+.Feed-section {
     margin-bottom: 40px;
 }
 
