@@ -2,9 +2,9 @@
     <button @click="voltar" class="btn-voltar">Voltar</button>
     <h1 class="cadastro-title">Cadastro</h1>
     <div class="cadastro-container">
-        <input type="text" v-model="novoUsername" placeholder="Crie seu username"/>
-        <input type="text" v-model="novoEmail" placeholder="Coloque seu e-mail"/>
-        <input type="password" v-model="novaSenha" placeholder="Crie sua senha"/>
+        <input type="text" v-model="Username" placeholder="Crie seu username"/>
+        <input type="text" v-model="Email" placeholder="Coloque seu e-mail"/>
+        <input type="password" v-model="Senha" placeholder="Crie sua senha"/>
         <button @click="cadastreSe" class="btn-cadastro">Cadastre-se</button>
     </div>
 </template>
@@ -12,38 +12,39 @@
 <script>
 import Login from './Login.vue'
 import PagInicial from './PagInicial.vue' 
+import axios from 'axios';
 export default{
     name : 'Cadastro', 
      data() {
         return{
-        novoUsername:"",
-        novoEmail:"",
-        novaSenha:"",
-        username:[],
-        email:[],
-        senha:[],
+        Username:"",
+        Email:"",
+        Senha:"",
 }
 },
     methods:{
         voltar(){
             this.$router.push({name:PagInicial})
         },
-        cadastreSe(){
-            if(this.novoUsername.trim() !== '' && this.novoEmail.trim() !== '' && this.novaSenha.trim() !== ''){
-                this.username.push(this.novoUsername);
-                this.email.push(this.novoEmail);
-                this.senha.push(this.novaSenha);
-                this.novaSenha = "";
-                this.novoEmail = "";
-                this.novoUsername = "";
-                this.$router.push({name:Login});
-            }
-            else{    
+        async cadastreSe(){
+            if(!this.Username || !this.Email || !this.Senha){
                 alert("os três campos devem ser preenchidos");
-                this.novaSenha = "";
-                this.novoEmail = "";
-                this.novoUsername = "";
-            }    
+                this.Senha = "";
+                this.Email = "";
+                this.Username = "";
+                return;
+            }
+            try{
+                const response = await axios.post("http://localhost:5135/api/User",{
+                    username:this.Username,
+                    email:this.Email,
+                    password:this.Senha,
+                });
+                console.log(response.data);
+                this.$router.push({name:Login});
+            }catch(error){
+                this.erro = 'Cadastro falhou:' + (error.response?.data?.message || error.message);
+            }
         },
     }
 }

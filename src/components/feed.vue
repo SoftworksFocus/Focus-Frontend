@@ -2,7 +2,7 @@
   <div class="activity-list">
     <h2>Feed de Atividades</h2>
 
-    <div v-if="atividades.length">
+    <div v-if="atividades.length" class="activity-card">
       <atividade
         v-for="item in atividades"
         :key="item.id"
@@ -29,7 +29,7 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://localhost:5135/1');
+      const response = await axios.get('http://localhost:5135/api/Activity');
       this.atividades = response.data;
     } catch (error) {
       console.error("Erro ao buscar atividades:", error.message);
@@ -62,5 +62,14 @@ export default {
   color: var(--text-color-secondary); 
   text-align: center;
   padding: 10px 0;
+}
+.atividade-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s ease;
 }
 </style>

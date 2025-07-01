@@ -8,17 +8,17 @@
             <h1>User.teste</h1>
             <p class="user-bio">Gamer casual, Rage profissional</p>
             <div class="profile-stats">
-                <span><strong>350</strong> Seguidores</span>
-                <span><strong>250</strong> Seguindo</span>
             </div>
-            <h3>Posts relacionados</h3>
-            <div class="grid-posts">
-                <div class="post-item">
-                    <img class="post-image" src="https://www.mooc.org/hs-fs/hubfs/learn-programming-career-jpg.jpeg?width=500&name=learn-programming-career-jpg.jpeg" alt="Postagem"/>
-                    <p>Trampando</p>
+            <h3>Atividades relacionadas</h3>
+            <div class="grid-activities">
+               <div v-if="atividade">
+                  <div v-for="atividade in atividade" :key="atividade.id">
+                    <MidiaAtividade :midias="atividade.media" :atividade="atividade" />
+                  </div>
                 </div>
+               <p v-else>Carregando mídia...</p>
+              </div>
             </div>
-        </div>
          <div v-if="editProfile" class="edit-profile-popup-backdrop" @click.self="Edit">
       <div class="edit-profile-popup-content">
         <button @click="Edit" class="btn-close-popup">
@@ -47,10 +47,14 @@
 </template>
 
 <script>
+import MidiaAtividade from '../components/MidiaAtividade.vue'
+import axios from 'axios'
 import BotaoGenerico from '@/components/botaoGenerico.vue';
 import Homepage from './Homepage.vue';
+import AtividadeDetalhes from './AtividadeDetalhes.vue';
     export default{
         name:'Perfil',
+        components:{MidiaAtividade, BotaoGenerico},
            methods:{
             Voltar(){
              this.$router.push({name:Homepage})
@@ -64,18 +68,32 @@ import Homepage from './Homepage.vue';
             Salvar(){
               console.log("Salvo!")
             },
-
-        },
-        components:{BotaoGenerico},
+            Atividade(){
+      this.$router.push({name:AtividadeDetalhes});
+    }
+  },
         data(){
           return{
             editProfile:false,
             novoUsername:"",
             novaBiografia:"",
+            atividade: [],
           }
-        }
+        },
+               async created() {
+    try {
+      const response = await axios.get('http://localhost:5135/api/Activity');
+      if (Array.isArray(response.data)) {
+        this.atividade = response.data;
+        console.log(this.atividade)
+      } else {
+        console.warn('Formato de resposta inesperado.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar atividades do usuário:', error.message);
     }
-
+  }
+}
 </script>
 <style scoped>
 .profile-page-container {
@@ -138,14 +156,14 @@ h3 {
   color: var(--text-color); 
 }
 
-.grid-posts {
+.grid-activities {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 15px;
   margin-top: 20px;
 }
 
-.post-item {
+.activity-item {
   border: 1px solid var(--border-color); 
   border-radius: 6px;
   overflow: hidden;
@@ -154,14 +172,14 @@ h3 {
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.post-image {
+.activity-image {
   width: 100%;
   height: 150px;
   object-fit: cover;
   display: block;
 }
 
-.post-item p {
+.activity-item p {
   padding: 10px;
   font-size: 0.9em;
   color: var(--text-color);

@@ -3,7 +3,7 @@
     <h1 class="login-title">Login</h1>
     <div class="login-container">
         <input type="text" placeholder="Coloque seu e-mail" v-model="email"/>
-        <input type="password" placeholder="Crie sua senha" v-model="password"/>
+        <input type="password" placeholder="Coloque sua senha" v-model="password"/>
         <button v-on:click="autenticar()" class="btn-login">Login</button>
         <button class="link-forgot-password" @click="RecSenha">esqueceu sua senha?</button>
         <p v-if="erro"> {{ erro }}</p>
