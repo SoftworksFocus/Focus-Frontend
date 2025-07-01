@@ -1,9 +1,6 @@
 <template>
 <div class="theme-switcher">
-    <label class="switch">
       <input type="checkbox" v-model="isDark" @change="toggleTheme"/>
-      <span class="slider round"></span>
-    </label>
     <span class="theme-label-text">{{ isDark ? 'Modo Escuro' : 'Modo Claro' }}</span>
   </div>
 </template>
@@ -63,7 +60,7 @@ export default{
 }
 
 
-.slider {
+.slider-round {
   position: relative;
   cursor: pointer;
   width: 50px;

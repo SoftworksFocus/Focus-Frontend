@@ -1,8 +1,15 @@
 <template>
 
-<div>
+<div class="header">
+    <img :src="require('@/assets/focus_icon.png')" class="header-img"/>
     <h1 class="app-name">Focus</h1>
-    <p></p>
+    <p>Conecte-se com pessoas que compartilham seus interesses.
+
+Está cansado de aprender, treinar ou criar sozinho? No nosso app, você encontra grupos prontos para tudo — de programação a exercícios, de hobbies criativos a maratonas de RPG.
+Aqui, cada grupo é uma nova chance de crescer, trocar experiências e se divertir com quem fala a mesma língua que você.
+Quer praticar inglês com gente real?  Procurando parceiros de treino ou um grupo de estudos?  Ou só quer falar sobre seu filme favorito com quem realmente entende?
+Você escolhe os grupos, entra na conversa, participa de eventos e compartilha o que ama. Tudo em um só lugar.
+Mais conexões reais, menos rolagem sem sentido. Encontre seu grupo. Ou vários. </p>
 </div>
 <div>
     <button v-on:click="cadastro()" class="btn-primary">Cadastre-se</button>

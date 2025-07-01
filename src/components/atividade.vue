@@ -1,4 +1,5 @@
 <template>
+  <router-link :to="`/atividade/${atividade.id}`" class="atividade-link">
   <Card class="activity-card">
     <div class="activity-header">
     <h3 class="activity-name">{{ atividade.title }}</h3>
@@ -32,12 +33,13 @@
       </ul>
     </div>
   </Card>
+</router-link>
 </template>
 
 <script>
 import Card from './card.vue'
 export default {
-  name: 'Atividade',
+  name: 'atividade',
   components:{Card},
   props: {
     atividade: {
@@ -56,7 +58,9 @@ export default {
 <style scoped>
 .activity-card {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
+  border: 1px;
+  border-color:black;
 }
 
 .activity-header {

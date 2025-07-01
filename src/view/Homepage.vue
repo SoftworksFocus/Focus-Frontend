@@ -13,6 +13,9 @@
         <img src="@/assets/config_icon.png" alt="Configurações" class="icon-sidebar">
         Configurações
       </button>
+      <button @click="Login">
+        Sair
+      </button>
       </div>
     <div class="search-section">
         <botaoGenerico click="buscaAtiva" @toggle="alternarBusca" class="search-toggle-btn">
@@ -57,6 +60,7 @@ import botaoGenerico from '../components/botaoGenerico.vue';
 import Perfil from './Perfil.vue';
 import Feed from '../components/feed.vue';
 import Config from './Config.vue';
+import Login from './Login.vue';
 export default{
     components:{
         botaoGenerico,
@@ -86,6 +90,9 @@ export default{
         },
         Config(){
           this.$router.push({name:Config})
+        },
+        Login(){
+            this.$router.push({name:Login})
         },
          handleToggleTask({ groupId, taskId, newStatus }) {
             const group = this.groups.find(g => g.id === groupId);

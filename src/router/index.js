@@ -7,6 +7,7 @@ import RecSenha from '@/view/RecSenha.vue'
 import MudEmail from '@/view/MudEmail.vue'
 import MudSenha from '@/view/MudSenha.vue'
 import Config from '@/view/Config.vue'
+import Atividade from '../view/AtividadeDetalhes.vue'
 import{createRouter, createWebHistory} from 'vue-router'
 
 
@@ -46,6 +47,10 @@ const routes=[
     {name:MudSenha,
     component:MudSenha,
     path:'/mudSenha'    
+    },
+    {name:Atividade,
+    component:Atividade,
+    path:'/atividade/:id',   
     },
 ];
 const router =createRouter({

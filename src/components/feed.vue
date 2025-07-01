@@ -1,26 +1,27 @@
 <template>
-  <div>
+  <div class="activity-list">
     <h2>Feed de Atividades</h2>
 
     <div v-if="atividades.length">
-      <Atividade
+      <atividade
         v-for="item in atividades"
         :key="item.id"
         :atividade="item"
       />
     </div>
 
-    <p v-else>Nenhuma atividade encontrada.</p>
+    <p v-else class="no-activities-message">Nenhuma atividade encontrada.</p>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import Atividade from './atividade.vue';
+import atividade from './atividade.vue';
+import Atividade from '../view/AtividadeDetalhes.vue';
 
 export default {
   name: 'Feed',
-  components: { Atividade },
+  components: { atividade },
   data() {
     return {
       atividades: []
@@ -32,6 +33,11 @@ export default {
       this.atividades = response.data;
     } catch (error) {
       console.error("Erro ao buscar atividades:", error.message);
+    }
+  },
+  methods:{
+      Atividade(){
+      this.$router.push({name:Atividade});
     }
   }
 };
