@@ -44,12 +44,16 @@
               <img src="@/assets/X_icon.png">
             </button>
             <h3>O que você está pensando?</h3>
+            <input v-model="titulo" type="text" placeholder="Escreva aqui o titulo" class="post-title"/>
             <input v-model="textoPost" type="text" placeholder="Escreva aqui sua postagem" class="post-input"/>
+            <input type="datetime-local" v-model="inicio" class="post-date"/>
+            <input type="datetime-local" v-model="fim" class="post-date"/>
             <button @click="imagem"  alt="Adicionar Imagem" class="icon-add-image">
               <img src="@/assets/image_icon.png">
             </button>
             <button class="btn-default">Salvar rascunho</button>
-            <button class="btn-primary">Enviar</button>
+            <button class="btn-primary" @click="enviarPost">Enviar</button>
+            <p> {{ erro }}</p>
         </div>
     </div>
 </div>
@@ -61,6 +65,7 @@ import Perfil from './Perfil.vue';
 import Feed from '../components/feed.vue';
 import Config from './Config.vue';
 import Login from './Login.vue';
+import axios from 'axios'
 export default{
     components:{
         botaoGenerico,
@@ -73,6 +78,9 @@ export default{
             criarPost:false,
             buscaAtiva:false,
             textoBusca:"",
+            inicio:"",
+            fim:"",
+            titulo:"" ,
 
       atividade: [],
 
@@ -108,9 +116,36 @@ export default{
     },
     Sidebar(){
       this.sidebar = !this.sidebar;
+    },
+        async enviarPost(){
+            try {
+                await axios.post('http://localhost:5135/api/Activity', {
+                    userId: 2,
+                    title: this.titulo,
+                    description: this.textoPost,
+                    startDate: this.inicio,
+                    endDate: this.fim,
+                });
+                window.location.reload();
+                this.criarPost = false;
+
+            } catch(error) {
+                this.erro = 'Criar atividade falhou: ' + (error.response?.data?.message || error.message);
+            }   
+        },
+        async carregarAtividades() {
+            try {
+                const response = await axios.get('http://localhost:5135/api/Activity');
+                this.atividades = response.data;
+            } catch (error) {
+                this.erro = 'Falha ao carregar atividades: ' + error.message;
+            }
+        }
+    },
+    mounted() {
+        this.carregarAtividades();
     }
-  },
-    }
+}
 </script>
 
 <style scoped>

@@ -27,7 +27,7 @@ export default {
       atividades: []
     };
   },
-  async created() {
+  async mounted() {
     try {
       const response = await axios.get('http://localhost:5135/api/Activity');
       this.atividades = response.data;
