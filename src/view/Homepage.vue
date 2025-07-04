@@ -13,7 +13,7 @@
         <img src="@/assets/config_icon.png" alt="Configurações" class="icon-sidebar">
         Configurações
       </button>
-      <button @click="Login">
+      <button @click="Login" class="sidebar-btn">
         Sair
       </button>
       </div>
@@ -48,9 +48,22 @@
             <input v-model="textoPost" type="text" placeholder="Escreva aqui sua postagem" class="post-input"/>
             <input type="datetime-local" v-model="inicio" class="post-date"/>
             <input type="datetime-local" v-model="fim" class="post-date"/>
-            <button @click="imagem"  alt="Adicionar Imagem" class="icon-add-image">
-              <img src="@/assets/image_icon.png">
-            </button>
+            <div class="image-upload-section">
+      <h4>Adicionar Mídia</h4>
+      
+      <input v-model="imagemCaption" type="text" placeholder="Legenda da imagem" class="caption-input"/>
+      
+      <input type="file" @change="handleSelecaoImagem" accept="image/*,video/*" ref="fileInput" style="display: none;" />
+      
+      <button @click="$refs.fileInput.click()" class="btn-icon-media">
+        <img src="@/assets/image_icon.png" class="icon-add-image">
+        Selecionar Imagem/Vídeo
+      </button>
+
+      <div v-if="imagemPreview" class="image-preview">
+        <img :src="imagemPreview" alt="Pré-visualização"/>
+            </div>
+        </div>
             <button class="btn-default">Salvar rascunho</button>
             <button class="btn-primary" @click="enviarPost">Enviar</button>
             <p> {{ erro }}</p>
@@ -65,7 +78,7 @@ import Perfil from './Perfil.vue';
 import Feed from '../components/feed.vue';
 import Config from './Config.vue';
 import Login from './Login.vue';
-import axios from 'axios'
+import api from '../api';
 export default{
     components:{
         botaoGenerico,
@@ -81,8 +94,11 @@ export default{
             inicio:"",
             fim:"",
             titulo:"" ,
-
-      atividade: [],
+            imagemSelecionada: null, 
+            imagemCaption: '',       
+            imagemPreview: null,   
+            isCreating: false,
+            erro:""
 
     }
     },
@@ -100,6 +116,7 @@ export default{
           this.$router.push({name:Config})
         },
         Login(){
+            localStorage.removeItem('authToken');
             this.$router.push({name:Login})
         },
          handleToggleTask({ groupId, taskId, newStatus }) {
@@ -111,40 +128,56 @@ export default{
         }
       }
     },
-    imagem(){
-      console.log("imagem");
-    },
     Sidebar(){
       this.sidebar = !this.sidebar;
     },
         async enviarPost(){
+            if(this.isCreating) return;
+            this.isCreating = true;
+            this.erro = "";
+
             try {
-                await axios.post('http://localhost:5135/api/Activity', {
+                 const response = await api.post('/Activity', {
                     userId: 2,
                     title: this.titulo,
                     description: this.textoPost,
                     startDate: this.inicio,
                     endDate: this.fim,
                 });
+                const atividadeId = response.data.id;
+                console.log(atividadeId);
+                if(this.imagemSelecionada != null){
+                    await this.enviarMidia(atividadeId)
+                }
                 window.location.reload();
                 this.criarPost = false;
 
-            } catch(error) {
-                this.erro = 'Criar atividade falhou: ' + (error.response?.data?.message || error.message);
+            } catch(erro) {
+                this.erro = 'Criar atividade falhou: ' + (erro.response?.data?.message || erro.message);
+            }finally{
+                this.isCreating = false;
             }   
         },
-        async carregarAtividades() {
-            try {
-                const response = await axios.get('http://localhost:5135/api/Activity');
-                this.atividades = response.data;
-            } catch (error) {
-                this.erro = 'Falha ao carregar atividades: ' + error.message;
+       enviarMidia(atividadeId) {
+            const formData = new FormData();
+            formData.append('File', this.imagemSelecionada);
+            formData.append('Caption', this.imagemCaption || 'Mídia da atividade');
+            return api.post(`/Activity/${atividadeId}/upload-media`, formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+        },
+    handleSelecaoImagem(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                this.imagemSelecionada = null;
+                this.imagemPreview = null;
+                return;
             }
-        }
-    },
-    mounted() {
-        this.carregarAtividades();
-    }
+            this.imagemSelecionada = file;
+        },
+},
 }
 </script>
 
@@ -413,6 +446,46 @@ export default{
  width: 20px;
   height: 20px;
   filter: invert(var(--icon-filter-invert, 0));
+}
+.image-upload-section {
+  display: flex; 
+  align-items: center; 
+  gap: 15px; 
+  margin-bottom: 15px; 
+}
+caption-input {
+  flex-grow: 1; 
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--body-bg);
+  color: var(--text-color);
+}
+.btn-icon-media {
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 5px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color 0.2s ease, border-color 0.3s ease;
+}
+
+.btn-icon-media:hover {
+  background-color: var(--button-default-bg);
+  border-color: var(--link-color);
+}
+
+.btn-icon-media img {
+  width: 24px;  
+  height: 24px;
+  filter: invert(var(--icon-filter-invert, 0)); 
 }
 
 </style>

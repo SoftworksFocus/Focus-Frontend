@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../api';
 export default {
     name:'AtividadeDetalhes',
   data() {
@@ -40,12 +40,12 @@ export default {
   },
   async mounted() {
     try {
-      const id = this.$route.params.id;
-      const res = await axios.get(`http://localhost:5135/api/Activity/${id}`);
+      const idAtividade = this.$route.params.id;
+      const res = await api.get(`/Activity/${idAtividade}`);
       console.log(res.data)
       this.atividade = res.data;
-    } catch (err) {
-      console.error("Erro ao carregar atividade:", err.message);
+    } catch (error) {
+      console.error("Erro ao carregar atividade:", error.message);
     }
   },
   methods: {
@@ -61,13 +61,8 @@ export default {
     async excluirAtividade() {
       if (confirm('Tem certeza que deseja excluir esta atividade?')) {
         try {
-          const token = localStorage.getItem('authToken');
           const id = this.$route.params.id;
-          await axios.delete(`http://localhost:5135/api/Activity/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
+          await api.delete(`/Activity/${id}`);
           alert('Atividade excluída com sucesso.');
           this.$router.push('/Homepage');
         } catch (err) {

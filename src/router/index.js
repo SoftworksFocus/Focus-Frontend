@@ -8,6 +8,8 @@ import MudEmail from '@/view/MudEmail.vue'
 import MudSenha from '@/view/MudSenha.vue'
 import Config from '@/view/Config.vue'
 import Atividade from '../view/AtividadeDetalhes.vue'
+import NotFound from '@/view/NotFound.vue'
+import ServerError from '@/view/ServerError.vue'
 import{createRouter, createWebHistory} from 'vue-router'
 
 
@@ -52,6 +54,14 @@ const routes=[
     component:Atividade,
     path:'/atividade/:id',   
     },
+    {name:'ServerError',
+    component: ServerError,
+    path: '/erro-servidor'
+    },
+    {name: 'NotFound',
+    component: NotFound,
+    path: '/:pathMatch(.*)*'  
+    }
 ];
 const router =createRouter({
     history:createWebHistory(),

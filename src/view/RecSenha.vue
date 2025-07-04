@@ -69,7 +69,7 @@ import Login from './Login.vue';
     border-radius: 20px;
     color: var(--button-primary-text-color);
     background: var(--button-primary-bg);
-    border: 1px solid var(--button-primary-bg);
+    border: 1px solid var(--border-color);
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
