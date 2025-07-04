@@ -57,7 +57,7 @@
       
       <button @click="$refs.fileInput.click()" class="btn-icon-media">
         <img src="@/assets/image_icon.png" class="icon-add-image">
-        Selecionar Imagem/Vídeo
+        Selecionar Mídia
       </button>
 
       <div v-if="imagemPreview" class="image-preview">
@@ -79,6 +79,7 @@ import Feed from '../components/feed.vue';
 import Config from './Config.vue';
 import Login from './Login.vue';
 import api from '../api';
+import { getUserIdFromToken } from '@/utils/auth';
 export default{
     components:{
         botaoGenerico,
@@ -95,11 +96,9 @@ export default{
             fim:"",
             titulo:"" ,
             imagemSelecionada: null, 
-            imagemCaption: '',       
-            imagemPreview: null,   
+            imagemCaption: '',         
             isCreating: false,
-            erro:""
-
+            erro:"",
     }
     },
     methods:{
@@ -132,13 +131,14 @@ export default{
       this.sidebar = !this.sidebar;
     },
         async enviarPost(){
+            const userId = getUserIdFromToken();
             if(this.isCreating) return;
             this.isCreating = true;
             this.erro = "";
 
             try {
                  const response = await api.post('/Activity', {
-                    userId: 2,
+                    userId: userId,
                     title: this.titulo,
                     description: this.textoPost,
                     startDate: this.inicio,
@@ -487,5 +487,4 @@ caption-input {
   height: 24px;
   filter: invert(var(--icon-filter-invert, 0)); 
 }
-
 </style>

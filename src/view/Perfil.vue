@@ -3,41 +3,43 @@
       <button class="btn-voltar" @click="Voltar">Voltar</button>
         <div class="profile-header">
           <BotaoGenerico @toggle="Edit" class="profile-avatar-btn">
-        <img :src="require('@/assets/icon.png')" alt="Avatar" class="profile-avatar" />
+          <img :src="require('@/assets/icon.png')" alt="Avatar" class="profile-avatar" />
           </BotaoGenerico>
-            <h1>User.teste</h1>
-            <p class="user-bio">Gamer casual, Rage profissional</p>
+            <h1>{{novoUsername}}</h1>
+            <p class="user-bio">{{novaBiografia}}</p>
             <div class="profile-stats">
             </div>
             <h3>Atividades relacionadas</h3>
             <div class="grid-activities">
                <div v-if="atividade">
                   <div v-for="atividade in atividade" :key="atividade.id">
-                    <MidiaAtividade :midias="atividade.media" :atividade="atividade" />
+                    <AtividadePerfil :midias="atividade.media" :atividade="atividade" />
                   </div>
                 </div>
                <p v-else>Carregando mídia...</p>
               </div>
             </div>
-         <div v-if="editProfile" class="edit-profile-popup-backdrop" @click.self="Edit">
-      <div class="edit-profile-popup-content">
-        <button @click="Edit" class="btn-close-popup">
-          <img :src="require('@/assets/X_icon.png')" alt="Fechar" class="icon-close-popup">
-        </button>
-        <h2>Editar Perfil</h2>
-        <div class="edit-form-body">
-          <img :src="require('@/assets/icon.png')" alt="Avatar atual" class="current-avatar" />
-          <button @click="MudarFoto" class="btn-mudar-foto">Mudar foto de perfil</button>
+        <div v-if="editProfile" class="edit-profile-popup-backdrop" @click.self="Edit">
+          <div class="edit-profile-popup-content">
+            <button @click="Edit" class="btn-close-popup">
+            <img :src="require('@/assets/X_icon.png')" alt="Fechar" class="icon-close-popup">
+            </button>
+            <h2>Editar Perfil</h2>
+              <div class="edit-form-body">
+                <img :src="require('@/assets/icon.png')" alt="Avatar atual" class="current-avatar" />
+                <input type="file" @change="handleSelecaoImagem" accept="image/*" ref="fileInput" style="display: none;" />
+                <button @click="$refs.fileInput.click()" class="btn-icon-media">
+                Selecionar Imagem
+                </button>
+                <h4>Novo nome:</h4>
+                <input v-model="novoUsername" type="text" placeholder="username" class="edit-input" />
 
-          <h4>Novo nome:</h4>
-          <input v-model="novoUsername" type="text" placeholder="username" class="edit-input" />
-
-          <h4>Nova biografia:</h4>
-          <textarea v-model="novaBiografia" placeholder="Escreva sua bio (máx. 150 caracteres)" maxlength="150" class="edit-textarea"></textarea>
-        </div>
-        <div class="edit-form-footer">
-          <button @click="Salvar" class="btn-salvar">Salvar Alterações</button>
-          <button @click="Edit" class="btn-cancelar">Cancelar</button>
+                <h4>Nova biografia:</h4>
+                <textarea v-model="novaBiografia" placeholder="Escreva sua bio (máx. 150 caracteres)" maxlength="150" class="edit-textarea"></textarea>
+              </div>
+          <div class="edit-form-footer">
+            <button @click="Salvar" class="btn-salvar">Salvar Alterações</button>
+            <button @click="Edit" class="btn-cancelar">Cancelar</button>
         </div>
       </div>
     </div>
@@ -47,30 +49,66 @@
 </template>
 
 <script>
-import MidiaAtividade from '../components/MidiaAtividade.vue'
+import AtividadePerfil from '../components/AtividadePerfil.vue'
 import api from '../api'
 import BotaoGenerico from '@/components/botaoGenerico.vue';
 import Homepage from './Homepage.vue';
 import AtividadeDetalhes from './AtividadeDetalhes.vue';
+import { getUserIdFromToken } from '@/utils/auth';
     export default{
         name:'Perfil',
-        components:{MidiaAtividade, BotaoGenerico},
+        components:{AtividadePerfil, BotaoGenerico},
            methods:{
             Voltar(){
              this.$router.push({name:Homepage})
             },
-            Edit(){
-              this.editProfile = !this.editProfile;
+            async Profile(){
+              try{
+                const userId = getUserIdFromToken();
+                const response = await api.get(`user/${userId}`)
+                this.novoUsername = response.data.username;
+                this.novaBiografia = response.data.description;
+                this.ProfilePicture = response.data.profilePictureUrl;
+              }catch(error){
+                this.error = 'Buscar perfil falhou: ' + (error.response?.data?.message || error.message);
+              }
             },
             MudarFoto(){
               console.log("mudou foto");
             },
-            Salvar(){
-              console.log("Salvo!")
+            Edit(){
+              this.editProfile=!this.editProfile;
+            },
+            async Salvar(){
+              const userId = getUserIdFromToken(); 
+              try{ 
+                  const response = await api.put(`user/${userId}`,{
+                  params :{
+                    id: userId,
+                  },
+                  username:this.novoUsername,
+                  description:this.novaBiografia,
+                })
+                this.novoUsername=response.data.username;
+                this.novaBiografia=response.data.description;
+                this.Profile();
+              }catch(error){
+              this.error = 'Editar o Perfil falhou: ' + (error.response?.data?.message || error.message);
+              }
+              this.editProfile = !this.editProfile;
             },
             Atividade(){
       this.$router.push({name:AtividadeDetalhes});
-    }
+    },
+    handleSelecaoImagem(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                this.imagemSelecionada = null;
+                this.imagemPreview = null;
+                return;
+            }
+            this.imagemSelecionada = file;
+        },
   },
         data(){
           return{
@@ -78,10 +116,12 @@ import AtividadeDetalhes from './AtividadeDetalhes.vue';
             novoUsername:"",
             novaBiografia:"",
             atividade: [],
+            ProfilePicture:null,
           }
         },
     async created() {
     try {
+      this.Profile();
       const response = await api.get('/Activity');
         this.atividade = response.data.items;
     } catch (error) {
