@@ -48,7 +48,7 @@
 
 <script>
 import MidiaAtividade from '../components/MidiaAtividade.vue'
-import axios from 'axios'
+import api from '../api'
 import BotaoGenerico from '@/components/botaoGenerico.vue';
 import Homepage from './Homepage.vue';
 import AtividadeDetalhes from './AtividadeDetalhes.vue';
@@ -80,15 +80,10 @@ import AtividadeDetalhes from './AtividadeDetalhes.vue';
             atividade: [],
           }
         },
-               async created() {
+    async created() {
     try {
-      const response = await axios.get('http://localhost:5135/api/Activity');
-      if (Array.isArray(response.data)) {
-        this.atividade = response.data;
-        console.log(this.atividade)
-      } else {
-        console.warn('Formato de resposta inesperado.');
-      }
+      const response = await api.get('/Activity');
+        this.atividade = response.data.items;
     } catch (error) {
       console.error('Erro ao buscar atividades do usuário:', error.message);
     }

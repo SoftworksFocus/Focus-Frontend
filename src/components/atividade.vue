@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/atividade/${atividade.id}`" class="activity-link">
+<router-link :to="`/atividade/${atividade.id}`" class="activity-link">
   <Card class="activity-card">
     <div>
     <h3>{{ atividade.title }}</h3>
