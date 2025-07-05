@@ -3,7 +3,7 @@
       <button class="btn-voltar" @click="Voltar">Voltar</button>
         <div class="profile-header">
           <BotaoGenerico @toggle="Edit" class="profile-avatar-btn">
-          <img :src="require('@/assets/icon.png')" alt="Avatar" class="profile-avatar" />
+          <img :src='ProfilePicture' alt="Avatar" class="profile-avatar" />
           </BotaoGenerico>
             <h1>{{novoUsername}}</h1>
             <p class="user-bio">{{novaBiografia}}</p>
@@ -26,7 +26,7 @@
             </button>
             <h2>Editar Perfil</h2>
               <div class="edit-form-body">
-                <img :src="require('@/assets/icon.png')" alt="Avatar atual" class="current-avatar" />
+                <img :src="ProfilePicture" alt="Avatar atual" class="current-avatar" />
                 <input type="file" @change="handleSelecaoImagem" accept="image/*" ref="fileInput" style="display: none;" />
                 <button @click="$refs.fileInput.click()" class="btn-icon-media">
                 Selecionar Imagem
@@ -68,14 +68,30 @@ import { getUserIdFromToken } from '@/utils/auth';
                 const response = await api.get(`user/${userId}`)
                 this.novoUsername = response.data.username;
                 this.novaBiografia = response.data.description;
+                if(response.data.profilePictureUrl == null){
+                  response.data.profilePictureUrl = "@/assets/icon.png"
+                }
                 this.ProfilePicture = response.data.profilePictureUrl;
               }catch(error){
                 this.error = 'Buscar perfil falhou: ' + (error.response?.data?.message || error.message);
               }
             },
-            MudarFoto(){
-              console.log("mudou foto");
-            },
+            async MudarFoto(){
+              const userId = getUserIdFromToken();
+              try{   
+              const formData = new FormData();
+              formData.append('File', this.imagemSelecionada);
+              const response = await api.post(`/User/${userId}/profile-picture`, formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data',
+                  }
+              });
+              this.imagemSelecionada = response.data.mediaUrl;
+              this.ProfilePicture = this.imagemSelecionada;
+            }catch(error){
+            this.error = 'Mudança de foto de perfil falhou: ' + (error.response?.data?.message || error.message);
+            }
+          },
             Edit(){
               this.editProfile=!this.editProfile;
             },
@@ -91,6 +107,9 @@ import { getUserIdFromToken } from '@/utils/auth';
                 })
                 this.novoUsername=response.data.username;
                 this.novaBiografia=response.data.description;
+                if(this.imagemSelecionada != null){
+                  await this.MudarFoto();
+                }
                 this.Profile();
               }catch(error){
               this.error = 'Editar o Perfil falhou: ' + (error.response?.data?.message || error.message);
@@ -104,7 +123,6 @@ import { getUserIdFromToken } from '@/utils/auth';
             const file = event.target.files[0];
             if (!file) {
                 this.imagemSelecionada = null;
-                this.imagemPreview = null;
                 return;
             }
             this.imagemSelecionada = file;
@@ -117,6 +135,7 @@ import { getUserIdFromToken } from '@/utils/auth';
             novaBiografia:"",
             atividade: [],
             ProfilePicture:null,
+            imagemSelecionada:null,
           }
         },
     async created() {

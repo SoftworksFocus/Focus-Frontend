@@ -53,18 +53,21 @@
       
       <input v-model="imagemCaption" type="text" placeholder="Legenda da imagem" class="caption-input"/>
       
-      <input type="file" @change="handleSelecaoImagem" accept="image/*,video/*" ref="fileInput" style="display: none;" />
+      <input type="file" @change="handleSelecaoImagem" accept="image/*,video/*" ref="fileInput" multiple style="display: none;" />
       
       <button @click="$refs.fileInput.click()" class="btn-icon-media">
         <img src="@/assets/image_icon.png" class="icon-add-image">
         Selecionar Mídia
       </button>
 
-      <div v-if="imagemPreview" class="image-preview">
-        <img :src="imagemPreview" alt="Pré-visualização"/>
-            </div>
+    <div v-if="imagemPreview.length > 0" class="image-preview-gallery">
+        <div v-for="(src, index) in imagemPreview" :key="index" class="image-preview-item">
+            <img :src="src" alt="Pré-visualização"/>
+            <button @click="removerImagem(index)" class="btn-remove-image" title="Remover Imagem">×</button>
         </div>
-            <button class="btn-default">Salvar rascunho</button>
+        </div>
+        </div>
+        <button class="btn-default">Salvar rascunho</button>
             <button class="btn-primary" @click="enviarPost">Enviar</button>
             <p> {{ erro }}</p>
         </div>
@@ -95,7 +98,8 @@ export default{
             inicio:"",
             fim:"",
             titulo:"" ,
-            imagemSelecionada: null, 
+            imagemSelecionada:[],
+            imagemPreview:[],
             imagemCaption: '',         
             isCreating: false,
             erro:"",
@@ -146,8 +150,8 @@ export default{
                 });
                 const atividadeId = response.data.id;
                 console.log(atividadeId);
-                if(this.imagemSelecionada != null){
-                    await this.enviarMidia(atividadeId)
+                if (this.imagemSelecionada.length > 0 && atividadeId) {
+                    await this.enviarTodasAsMidias(atividadeId);
                 }
                 window.location.reload();
                 this.criarPost = false;
@@ -158,24 +162,34 @@ export default{
                 this.isCreating = false;
             }   
         },
-       enviarMidia(atividadeId) {
-            const formData = new FormData();
-            formData.append('File', this.imagemSelecionada);
-            formData.append('Caption', this.imagemCaption || 'Mídia da atividade');
-            return api.post(`/Activity/${atividadeId}/upload-media`, formData, {
-                headers:{
-                    'Content-Type': 'multipart/form-data',
-                }
+       async enviarTodasAsMidias(atividadeId) {
+            const uploadPromises = this.imagemSelecionada.map(file => {
+                const formData = new FormData();
+                formData.append('File', file);
+                formData.append('Caption', this.imagemCaption || file.name);
+
+                return api.post(`/Activity/${atividadeId}/upload-media`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             });
+            await Promise.all(uploadPromises);
         },
     handleSelecaoImagem(event) {
-            const file = event.target.files[0];
-            if (!file) {
-                this.imagemSelecionada = null;
-                this.imagemPreview = null;
-                return;
+            const files = event.target.files;
+            if (!files) return;
+            const espacoDisponivel = 3-this.imagemSelecionada.length;
+            if (files.length > espacoDisponivel) {
+                alert(`Você pode selecionar no máximo mais ${espacoDisponivel} arquivo(s).`);
             }
-            this.imagemSelecionada = file;
+             for (let i = 0; i < Math.min(files.length, espacoDisponivel); i++) {
+                this.imagemSelecionada.push(files[i]);
+                this.imagemPreview.push(URL.createObjectURL(files[i]));
+            }
+            this.$refs.fileInput.value = '';
+        },
+         removerImagem(index) {
+            this.imagemSelecionada.splice(index, 1);
+            this.imagemPreview.splice(index, 1);
         },
 },
 }
@@ -486,5 +500,50 @@ caption-input {
   width: 24px;  
   height: 24px;
   filter: invert(var(--icon-filter-invert, 0)); 
+}
+.image-preview-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: 5px;
+}
+
+.image-preview-item {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.btn-remove-image {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.btn-remove-image:hover {
+  background-color: #c0392b;
 }
 </style>
