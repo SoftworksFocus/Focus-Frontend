@@ -13,6 +13,9 @@
         <img src="@/assets/config_icon.png" alt="Configurações" class="icon-sidebar">
         Configurações
       </button>
+      <button @click="ExplorarGrupos" class="sidebar-btn">
+        Explorar Grupos
+      </button>
       <button @click="Login" class="sidebar-btn">
         Sair
       </button>
@@ -57,7 +60,6 @@
       
       <button @click="$refs.fileInput.click()" class="btn-icon-media">
         <img src="@/assets/image_icon.png" class="icon-add-image">
-        Selecionar Mídia
       </button>
 
     <div v-if="imagemPreview.length > 0" class="image-preview-gallery">
@@ -121,6 +123,10 @@ export default{
         Login(){
             localStorage.removeItem('authToken');
             this.$router.push({name:Login})
+        },
+        ExplorarGrupos(){
+          console.log("chamada")
+          this.$router.push({name:'ExplorarGrupo'})
         },
          handleToggleTask({ groupId, taskId, newStatus }) {
             const group = this.groups.find(g => g.id === groupId);

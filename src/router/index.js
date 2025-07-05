@@ -10,6 +10,8 @@ import Config from '@/view/Config.vue'
 import Atividade from '../view/AtividadeDetalhes.vue'
 import NotFound from '@/view/NotFound.vue'
 import ServerError from '@/view/ServerError.vue'
+import ExplorarGrupo from '@/view/ExplorarGrupo.vue'
+import GrupoDetalhe from '@/view/GrupoDetalhe.vue'
 import{createRouter, createWebHistory} from 'vue-router'
 
 
@@ -57,6 +59,14 @@ const routes=[
     {name:'ServerError',
     component: ServerError,
     path: '/erro-servidor'
+    },
+    {name:'ExplorarGrupo',
+    component: ExplorarGrupo,
+    path:'/explorarGrupos'
+    },
+    {name:'GrupoDetalhe',
+    component: GrupoDetalhe,
+    path:'/grupo/:id'
     },
     {name: 'NotFound',
     component: NotFound,
