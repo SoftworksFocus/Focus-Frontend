@@ -60,27 +60,27 @@ ul{
   list-style-type: none;
 }
 .activity-card {
-  background-color: #ffffff;
-  border: 1px solid #dcdcdc;
+  background-color: var(--card-color);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
   margin: 20px auto;
   max-width: 700px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  color: #2c3e50;
+  box-shadow: 0 4px 10px var(--border-color);
+  color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
 }
 .activity-card h2 {
   margin-bottom: 10px;
   font-size: 1.5rem;
-  color: #1a1a1a;
-  border-bottom: 1px solid #eee;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
 }
 
 .activity-card p {
   margin: 6px 0;
-  color: #333;
+  color: var(--text-color);
 }
 
 .midia-container {
@@ -94,7 +94,7 @@ ul{
 .midia video {
   border-radius: 8px;
   max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--border-color);
 }
 
 .activity-header {

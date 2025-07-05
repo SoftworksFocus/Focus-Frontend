@@ -2,7 +2,11 @@
   <div class="activity-list">
     <h2>Feed de Atividades</h2>
 
-    <div v-if="atividades.length">
+    <p v-if="atividades.length === 0 && !isLoading" class="no-activities-message">
+      Nenhuma atividade encontrada.
+    </p>
+
+    <div v-else class="feed-content">
       <atividade
         v-for="item in atividades"
         :key="item.id"
@@ -10,16 +14,13 @@
       />
     </div>
 
-    <p v-else class="no-activities-message">Nenhuma atividade encontrada.</p>
-    <div v-if="!isLoading && totalAtividades > 0" class="pagination-controls">
-      <button @click="paginaAnterior" :disabled="!temPaginaAnterior" class="btn-pagination">
-        Anterior
-      </button>
-      <span class="pagination-info">
-        Página {{ currentPage }} de {{ totalPages }}
-      </span>
-      <button @click="proximaPagina" :disabled="!temProximaPagina" class="btn-pagination">
-        Próximo
+    <div v-if="isLoading" class="loading-spinner">
+      <p>Carregando...</p>
+    </div>
+
+    <div v-if="hasNextCursor && !isLoading" class="load-more-container">
+      <button @click="loadMoreActivities" class="btn-load-more">
+        Carregar Mais
       </button>
     </div>
   </div>
@@ -29,72 +30,52 @@
 import api from '@/api';
 import atividade from './atividade.vue';
 import AtividadeDetalhes from '@/view/AtividadeDetalhes.vue';
+import { getUserIdFromToken } from '@/utils/auth';
 export default {
   data(){
     return{
-      atividades:[],
-      isLoading: true, 
-      currentPage: 1,
-      pageSize: 10, 
-      totalAtividades: 0,
-      totalPages:0
+      atividades: [],      
+      isLoading: false,
+      nextCursor: null,    
+      hasNextCursor: true, 
+      pageSize: 10,        
     }
   },
-  computed: {
-    temPaginaAnterior() {
-      return this.currentPage > 1;
-    },
-    temProximaPagina() {
-      return this.currentPage < this.totalPages;
-    }
-  },
+
     components:{atividade},
-    async mounted() {
-      this.fetchAtividades(this.currentPage)
-    try {
-      const response = await api.get('/Activity');
-      this.atividades = response.data.items;
-    } catch (error) {
-      if (error.response?.status !== 401 && error.response?.status !== 500) {
-       console.error("Falha ao carregar o feed:", error);
-    }
-  }
+    mounted() {
+    this.loadMoreActivities();
 },
   methods:{
     Atividade(){
       this.$router.push({name:AtividadeDetalhes})
     },
-    proximaPagina() {
-      if (this.temProximaPagina) {
-        this.fetchAtividades(this.currentPage + 1);
-      }
-      },
-    paginaAnterior() {
-      if (this.temPaginaAnterior) {
-        this.fetchAtividades(this.currentPage - 1);
-      }
-      },
-     async fetchAtividades(page) {
-        this.isLoading = true;
-        try {
-            const response = await api.get('/Activity', {
-            params: {
-                page: page,
-                pageSize: this.pageSize
-            }
-            });
+    async loadMoreActivities() {
+      const userId = getUserIdFromToken();
+      if (this.isLoading) return;
+      this.isLoading = true;
 
-            this.atividades = response.data.items;
-            this.totalAtividades = response.data.totalCount;
-            this.currentPage = page;
-            this.totalPages = response.data.totalPages;
+      try {
+        const response = await api.get(`/Feed/${userId}`, {
+          params: {
+            cursor: this.nextCursor, 
+            pageSize: this.pageSize,
+          }
+        });
+        
+        this.atividades.push(...response.data.activities);
+
+        this.nextCursor = response.data.nextCursor;
+        
+        this.hasNextCursor = this.nextCursor !== null;
 
       } catch (error) {
-        console.error("Erro ao buscar atividades paginadas:", error);
+        console.error("Erro ao buscar mais atividades:", error);
+        this.hasNextCursor = false; 
       } finally {
         this.isLoading = false;
       }
-    },
+    }
   }
 }
 </script>
@@ -105,52 +86,40 @@ export default {
   padding-top: 15px;
 }
 
+.activity-list h2 {
+  font-size: 1.5em;
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
 
-.loading-spinner {
+.loading-spinner, .no-activities-message {
   text-align: center;
   padding: 40px;
   font-style: italic;
   color: var(--text-color-secondary);
 }
 
-.no-activities-message {
-  font-style: italic;
-  color: var(--text-color-secondary); 
-  text-align: center;
-  padding: 20px 0;
-}
-
-.pagination-controls {
+.load-more-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  gap: 15px;
+  padding: 20px;
 }
 
-.pagination-info {
-  font-weight: bold;
-  color: var(--text-color);
-}
-
-.btn-pagination {
-  padding: 8px 16px;
+.btn-load-more {
+  padding: 10px 25px;
   border: 1px solid var(--border-color);
   background-color: var(--button-default-bg);
   color: var(--button-text-color);
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
   transition: background-color 0.2s, color 0.2s;
 }
 
-.btn-pagination:hover:not(:disabled) {
+.btn-load-more:hover {
   background-color: var(--link-color);
   color: var(--button-primary-text-color);
   border-color: var(--link-color);
-}
-
-.btn-pagination:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 </style>

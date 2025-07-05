@@ -10,14 +10,6 @@
 <script>
 export default{
     name:'botaoGenerico',
-    props:{
-        ativo:{
-          type:Boolean,
-        },
-        click:{
-          type:Boolean,
-        },
-    },
 }
 </script>
 <style scoped>
