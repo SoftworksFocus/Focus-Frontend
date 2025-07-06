@@ -83,4 +83,13 @@ export default {
 .search-bar input { width: 100%; padding: 12px 15px; border-radius: 25px; border: 1px solid var(--border-color); background-color: var(--body-bg); color: var(--text-color); font-size: 1em; }
 .no-results { text-align: center; margin-top: 50px; color: var(--text-color-secondary); }
 .grupos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+@media (max-width: 768px) {
+  .page-container {
+    padding-left: 20px;
+  }
+
+  .grupos-grid {
+    grid-template-columns: 1fr; 
+  }
+}
 </style>

@@ -10,8 +10,6 @@
 </template>
 
 <script>
-import Login from './Login.vue'
-import PagInicial from './PagInicial.vue' 
 import axios from 'axios';
 export default{
     name : 'Cadastro', 
@@ -24,7 +22,7 @@ export default{
 },
     methods:{
         voltar(){
-            this.$router.push({name:PagInicial})
+            this.$router.push({name:'PagInicial'})
         },
         async cadastreSe(){
             if(!this.Username || !this.Email || !this.Senha){
@@ -41,7 +39,7 @@ export default{
                     password:this.Senha,
                 });
                 console.log(response.data);
-                this.$router.push({name:Login});
+                this.$router.push({name:'Login'});
             }catch(error){
                 this.erro = 'Cadastro falhou:' + (error.response?.data?.message || error.message);
             }
@@ -118,5 +116,12 @@ export default{
 .btn-cadastro:hover {
     filter: brightness(0.9);
 }
-
+@media (max-width: 480px) {
+  .cadastro-container {
+    max-width: 100%;
+    padding: 20px 15px; 
+    box-shadow: none; 
+    border-radius: 0;
+  }
+}
 </style>

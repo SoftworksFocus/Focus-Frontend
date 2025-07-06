@@ -20,24 +20,56 @@
     </div>
 
     <div class="botoes">
+      <BotaoCriarFlutuante/>
       <button @click="voltar">← Voltar</button>
-      <button @click="editarAtividade">✏️ Editar</button>
+      <button @click="PopupEdicao">✏️ Editar</button>
       <button @click="excluirAtividade" class="btn-danger">🗑️ Excluir</button>
     </div>
+    
   </div>
 
   <p v-else>Carregando...</p>
+   <div v-if="showEditPopup" class="popup-backdrop" @click.self="fecharPopupEdicao">
+    <div class="popup-content">
+      <h2>Editar Atividade</h2>
+      <form @submit.prevent="salvarEdicao">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input type="text" id="title" v-model="editedActivity.title" />
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <textarea id="description" v-model="editedActivity.description"></textarea>
+          <input type="datetime-local" v-model="editedActivity.startDate" class="popup-input"/>
+        <input type="datetime-local" v-model="editedActivity.endDate" class="popup-input"/>
+        </div>
+        <div class="popup-botoes">
+          <button type="button" @click="PopupEdicao" class="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
+import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
 import api from '../api';
 export default {
     name:'AtividadeDetalhes',
   data() {
     return {
-      atividade: null
+      atividade: null,
+      showEditPopup: false,
+      editedActivity: {
+        title: '',
+        description: '',
+        startDate:"",
+        endDate:""
+      }
     };
   },
+  components:{BotaoCriarFlutuante},
   async mounted() {
     try {
       const idAtividade = this.$route.params.id;
@@ -55,8 +87,27 @@ export default {
     voltar() {
       this.$router.push('/Homepage');
     },
-    editarAtividade() {
-      this.$router.push(`/atividade/${this.id}/editar`);
+    PopupEdicao() {
+      if (this.atividade) {
+        this.editedActivity = { ...this.atividade };
+        this.showEditPopup = !this.showEditPopup;
+      }
+    },
+    async salvarEdicao() {
+      try {
+        const id = this.$route.params.id;
+        await api.put(`/Activity/${id}`,{
+          title:this.editedActivity.title,
+          description:this.editedActivity.description,
+          startDate: this.editedActivity.startDate,
+          endDate: this.editedActivity.endDate
+        });
+        this.atividade = { ...this.editedActivity };
+        this.PopupEdicao();
+      } catch (err) {
+        console.error("Erro ao salvar a edição:", err.message);
+        alert('Erro ao salvar a edição.');
+      }
     },
     async excluirAtividade() {
       if (confirm('Tem certeza que deseja excluir esta atividade?')) {
@@ -111,5 +162,75 @@ button:hover {
 }
 .btn-danger:hover {
   background-color: #c0392b;
+}
+*ul{
+  list-style-type: none;
+}
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 500px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.popup-botoes {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.popup-botoes .btn-cancel {
+  background-color: #ccc;
+  margin-right: 10px;
+}
+
+.popup-botoes .btn-save {
+  background-color: #3498db;
+}
+.modal-input{ width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 5px; background-color: var(--body-bg); color: var(--text-color); box-sizing: border-box; }
+@media (max-width: 768px) {
+  .detalhe-container {
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .botoes {
+    flex-direction: column;
+  }
+
+  .botoes button {
+    width: 100%;
+  }
 }
 </style>

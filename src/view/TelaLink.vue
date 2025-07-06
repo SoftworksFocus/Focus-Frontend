@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import Login from './Login.vue';
     export default{
         name:'RecSenha',
         data(){
@@ -17,7 +16,7 @@ import Login from './Login.vue';
         },
         methods:{
             Confirmar(){
-             this.$router.push({name:Login})
+             this.$router.push({name:'Login'})
             }
         }
     }
@@ -76,5 +75,18 @@ import Login from './Login.vue';
 }
 .btn-primary:hover {
     filter: brightness(0.9);
+}
+@media (max-width: 480px) {
+  .recovery-container, .credentials-change-container {
+    padding: 20px 15px;
+    margin: 10px;
+    box-shadow: none; 
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
 }
 </style>

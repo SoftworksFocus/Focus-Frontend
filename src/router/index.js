@@ -3,9 +3,7 @@ import Cadastro from '../view/Cadastro.vue'
 import Login from '../view/Login.vue'
 import Perfil from '../view/Perfil.vue'
 import Homepage from '../view/Homepage.vue'
-import RecSenha from '@/view/RecSenha.vue'
-import MudEmail from '@/view/MudEmail.vue'
-import MudSenha from '@/view/MudSenha.vue'
+import TelaLink from '@/view/TelaLink.vue'
 import Config from '@/view/Config.vue'
 import Atividade from '../view/AtividadeDetalhes.vue'
 import NotFound from '@/view/NotFound.vue'
@@ -36,21 +34,13 @@ const routes=[
     component:Homepage,
     path:'/homepage'    
     },
-    {name:'RecSenha',
-    component:RecSenha,
-    path:'/recsenha'    
+    {name:'TelaLink',
+    component:TelaLink,
+    path:'/telaLink'    
     },
     {name:'Config',
     component:Config,
     path:'/config'    
-    },
-    {name:'MudEmail',
-    component:MudEmail,
-    path:'/mudEmail'    
-    },
-    {name:'MudSenha',
-    component:MudSenha,
-    path:'/mudSenha'    
     },
     {name:'Atividade',
     component:Atividade,

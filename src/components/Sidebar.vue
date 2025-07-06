@@ -62,10 +62,29 @@ export default {
 <style scoped>
 .sidebar-toggle-btn {
   position: fixed; top: 20px; left: 20px; z-index: 1001;
-  background-color: var(--button-default-bg); border: 1px solid var(--border-color);
-  border-radius: 50%; width: 50px; height: 50px; display: flex;
-  align-items: center; justify-content: center; box-shadow: var(--card-shadow);
-  transition: background-color 0.2s ease, transform 0.2s ease; cursor: pointer;
+  background-color: var(--primary-color); 
+color: white;
+border: none;
+border-radius: 50%; 
+width: 40px;
+height: 40px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+cursor: pointer;
+display: flex;
+justify-content: center;
+align-items: center;
+transition: background-color 0.3s ease;
+margin: 10px auto; 
+}
+
+.sidebar-toggle-button:hover {
+background-color: var(--primary-color-darker);
+}
+
+
+.sidebar-toggle-button i,
+.floating-button i {
+font-size: 1.2rem; 
 }
 .sidebar-toggle-btn:hover { transform: scale(1.05); }
 .icon-menu, .icon-close { width: 24px; height: 24px; filter: invert(var(--icon-filter-invert, 0)); }

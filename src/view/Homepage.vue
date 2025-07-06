@@ -69,4 +69,9 @@ export default {
     height: 20px;
     filter: invert(var(--icon-filter-invert, 0));
 }
+@media (max-width: 768px) {
+  .homepage-container {
+    padding-left: 20px; 
+  }
+}
 </style>

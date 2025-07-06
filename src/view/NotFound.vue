@@ -10,13 +10,12 @@
 </template>
 
 <script>
-import PagInicial from './PagInicial.vue';
 
 export default {
   name: 'NotFound',
   methods: {
     irParaHome() {
-      this.$router.push({ name:PagInicial });
+      this.$router.push({ name:'PagInicial' });
     }
   }
 }
@@ -75,5 +74,24 @@ export default {
 
 .btn-primary:hover {
   filter: brightness(0.9);
+}
+@media (max-width: 480px) {
+  .error-card {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .error-title {
+    font-size: 2.5em;
+  }
+
+  .error-message {
+    font-size: 1.2em;
+  }
+
+  .btn-primary, .btn-default {
+    width: 100%;
+    font-size: 1em;
+  }
 }
 </style>

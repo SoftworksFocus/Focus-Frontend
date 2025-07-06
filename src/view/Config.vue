@@ -5,6 +5,7 @@
     <div class="config-buttons-group">
         <button @click="MudEmail" class="btn-config">Mudar Email</button>
         <button @click="MudSenha" class="btn-config">Mudar Senha</button>
+        <button @click="DeletarConta" class="btn-danger btn-config">Deletar Conta</button>
     </div>
     <h3 class="config-section-title">Aparência</h3>
     <div class="theme-setting">
@@ -16,6 +17,8 @@
 
 <script>
 import themeCheckbox from '@/components/themeCheckbox.vue';
+import api from '@/api';
+import { getUserIdFromToken } from '@/utils/auth';
 export default{
     name:'Config',
     components:{themeCheckbox,},
@@ -26,14 +29,25 @@ export default{
     },
     methods:{
         MudEmail(){
-            this.$router.push({name:'MudEmail'})
+            this.$router.push({name:'TelaLink'})
         },
         MudSenha(){
-            this.$router.push({name:'MudSenha'})
+            this.$router.push({name:'TelaLink'})
         },
         Voltar(){
             this.$router.push({name:'Homepage'})
         },
+        async DeletarConta(){
+            const userId = getUserIdFromToken();
+             if (confirm('Tem certeza que deseja DELETAR esta conta? Esta ação é irreversível.')) {
+            try{
+                await api.delete(`User/${userId}`)
+                this.$router.push({name:'PagInicial'})
+            }catch(error){
+                this.error = 'Erro ao deletar a conta'
+            }
+        }
+    },
     }
 
 }
@@ -114,5 +128,16 @@ export default{
 .btn-voltar:hover {
     filter: brightness(0.9);
 }
-
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+@media (max-width: 480px) {
+  .config-container {
+    max-width: 100%;
+    padding: 20px 15px; 
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
 </style>

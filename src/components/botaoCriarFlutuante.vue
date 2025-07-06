@@ -46,6 +46,12 @@
         <textarea v-model="novaAtividade.description" placeholder="Escreva aqui sua postagem" class="modal-textarea"></textarea>
         <input type="datetime-local" v-model="novaAtividade.startDate" class="modal-input"/>
         <input type="datetime-local" v-model="novaAtividade.endDate" class="modal-input"/>
+        <select v-model="novaAtividade.grupoId" class="modal-input">
+          <option disabled value="">Selecione um grupo</option>
+          <option v-for="grupo in grupos" :key="grupo.id" :value="grupo.id">
+            {{ grupo.name }}
+          </option>
+        </select>
         <div class="image-upload-section">
           <h4>Adicionar Mídia</h4>
           
@@ -97,7 +103,8 @@ export default {
         startDate: '',
         endDate: '',
         imagemSelecionada:[],
-        imagemPreview:[],         
+        imagemPreview:[],   
+        grupoId:"" ,      
         isCreating: false,
         erro:"",
       },
@@ -111,7 +118,8 @@ export default {
       this.showModalGrupo = true;
       this.isOpen = false;
     },
-    abrirModalAtividade() {
+    async abrirModalAtividade() {
+      await this.carregarGruposDoUsuario();
       this.showModalAtividade = true;
       this.isOpen = false;
     },
@@ -124,6 +132,18 @@ export default {
       this.showModalAtividade = false;
       this.novaAtividade = { title: '', description: '', startDate: '', endDate: '' };
       this.erroAtividade = '';
+    },
+    async carregarGruposDoUsuario() {
+      try {
+        const userId = getUserIdFromToken();
+        if (userId) {
+          const response = await api.get(`/user/Groups/${userId}`);
+          this.grupos = response.data;
+        }
+      } catch (error) {
+        console.error("Erro ao carregar grupos do usuário:", error);
+        this.erroAtividade = "Não foi possível carregar os grupos.";
+      }
     },
     async enviarNovoGrupo() {
         if (!this.novoGrupo.name || !this.novoGrupo.description) {
@@ -164,6 +184,7 @@ export default {
                 description: this.novaAtividade.description,
                 startDate: this.novaAtividade.startDate,
                 endDate: this.novaAtividade.endDate,
+                groupId: this.novaAtividade.grupoId || null,
             });
             const atividadeId = response.data.id;
              if (this.novaAtividade.imagemSelecionada.length > 0 && atividadeId) {
@@ -391,5 +412,14 @@ caption-input {
 
 .btn-remove-image:hover {
   background-color: #c0392b;
+}
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px; 
+  }
+
+  .modal-content h3 {
+    font-size: 1.2em;
+  }
 }
 </style>

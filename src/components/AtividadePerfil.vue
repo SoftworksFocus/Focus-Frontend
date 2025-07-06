@@ -1,61 +1,111 @@
 <template>
-  <div class="midia-container">
-    <div v-for="m in midias" :key="m.id" class="midia">
-      <router-link :to="`/atividade/${atividade.id}`" class="activity-link">
-        <video
-          v-if="m.url.endsWith('.mp4')"
-          controls
-          width="300"
-        >
-          <source :src="m.url" type="video/mp4" />
-        </video>
-        <img
-          v-else
-          :src="m.url"
-          alt="Mídia"
-          width="200"
-        />
-      </router-link>
+  <router-link :to="`/atividade/${atividade.id}`" class="activity-link">
+    <div class="container-atividade">
+    <router-link :to="`/atividade/${atividade.id}`" class="titulo-link">
+      <h4>{{ tituloTruncado }}</h4>
+    </router-link>
+
+    <div class="conteudo-atividade">
+      <div v-if="temMedia" class="container-midias">
+        <div v-for="midia in midias" :key="midia.id" class="item-midia">
+          <router-link :to="`/atividade/${atividade.id}`">
+            <video v-if="eVideo(midia.url)" :src="midia.url" class="midia" controls></video>
+            <img v-else :src="midia.url" class="midia" alt="Mídia da atividade" />
+          </router-link>
+        </div>
+      </div>
+
+      <div v-else class="placeholder-sem-midia">
+        <p>{{ atividade.description || 'Esta atividade não possui mídia.' }}</p>
+      </div>
     </div>
   </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   name: 'AtividadePerfil',
   props: {
-    midias: {
-      type: Array,
-      required: true
-    },
     atividade: {
       type: Object,
       required: true
+    },
+    midias: {
+      type: Array,
+      default: () => [] 
+    }
+  },
+  computed: {
+    tituloTruncado() {
+      if (!this.atividade || !this.atividade.title) {
+        return 'Atividade'; 
+      }
+      return this.atividade.title.split(' ')[0]; 
+    },
+    temMedia() {
+      return this.midias && this.midias.length > 0;
+    },
+    primeiraMidia() {
+      return this.temMedia ? this.midias[0] : null;
+    }
+  },
+  methods: {
+    eVideo(url) {
+      if (!url) return false;
+      const videoExtensions = ['.mp4', '.webm', '.ogg'];
+      return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
     }
   }
-};
+}
 </script>
 
 <style scoped>
-.midia-container {
+.container-atividade {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+}
+
+.titulo-link {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.titulo-link h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.titulo-link h4:hover {
+  text-decoration: underline;
+}
+
+.container-midias {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 1rem;
 }
 
-.midia img,
-.midia video {
-  border-radius: 8px;
-  max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  cursor: pointer; 
+.item-midia .midia {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
 }
 
-.midia img:hover,
-.midia video:hover {
-  opacity: 0.8;
-  transform: scale(1.02);
-  transition: all 0.2s ease-in-out;
+.placeholder-sem-midia p {
+  background-color: var(--body-bg);
+  padding: 1rem;
+  border-radius: 6px;
+  font-style: italic;
+  color: var(--text-color-secondary);
+  margin: 0;
 }
 </style>

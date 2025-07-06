@@ -1,24 +1,44 @@
 <template>
      <div class="profile-page-container">
+      <BotaoCriarFlutuante />
       <button class="btn-voltar" @click="Voltar">Voltar</button>
         <div class="profile-header">
-          <button @toggle="Edit" class="profile-avatar-btn">
+          <button @click="Edit" class="profile-avatar-btn">
           <img :src='ProfilePicture' alt="Avatar" class="profile-avatar" />
           </button>
             <h1>{{novoUsername}}</h1>
             <p class="user-bio">{{novaBiografia}}</p>
             <div class="profile-stats">
             </div>
+            <div class="secao-grupos">
+          <h3>Meus Grupos</h3>
+          <div v-if="grupos.length > 0" class="lista-grupos">
+            <div v-for="grupo in grupos" :key="grupo.id" class="cartao-grupo" @click="verGrupo(grupo.id)">
+              <img :src="grupo.profilePictureUrl" :alt="'Logo do grupo ' + grupo.name" class="grupo-imagem">
+              <p class="grupo-nome">{{ grupo.name }}</p>
+            </div>
+          </div>
+          <p v-else>Você ainda não participa de nenhum grupo.</p>
+        </div>
             <h3>Atividades relacionadas</h3>
             <div class="grid-activities">
                <div v-if="atividade">
-                  <div v-for="atividade in atividade" :key="atividade.id">
-                    <AtividadePerfil :midias="atividade.media" :atividade="atividade" />
+                  <div v-for="item in atividade" :key="item.id">
+                    <AtividadePerfil :midias="item.media" :atividade="item" />
                   </div>
                 </div>
                <p v-else>Carregando mídia...</p>
               </div>
             </div>
+            <div class="paginacao" v-if="totalPages > 1">
+                <button @click="irParaPagina(currentPage - 1)" :disabled="currentPage === 1" class="btn-paginacao">Anterior</button>
+                <span v-for="pagina in paginas" :key="pagina">
+                  <button @click="irParaPagina(pagina)" :class="['btn-paginacao', { 'pagina-atual': currentPage === pagina }]">
+                    {{ pagina }}
+                  </button>
+                </span>
+                <button @click="irParaPagina(currentPage + 1)" :disabled="currentPage === totalPages" class="btn-paginacao">Próximo</button>
+              </div>
         <div v-if="editProfile" class="edit-profile-popup-backdrop" @click.self="Edit">
           <div class="edit-profile-popup-content">
             <button @click="Edit" class="btn-close-popup">
@@ -51,12 +71,12 @@
 <script>
 import AtividadePerfil from '../components/AtividadePerfil.vue'
 import api from '../api'
-import BotaoGenerico from '@/components/botaoGenerico.vue';
 import AtividadeDetalhes from './AtividadeDetalhes.vue';
 import { getUserIdFromToken } from '@/utils/auth';
+import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
     export default{
         name:'Perfil',
-        components:{AtividadePerfil, BotaoGenerico},
+        components:{AtividadePerfil, BotaoCriarFlutuante},
            methods:{
             Voltar(){
              this.$router.push({name:'Homepage'})
@@ -64,16 +84,21 @@ import { getUserIdFromToken } from '@/utils/auth';
             async Profile(){
               try{
                 const userId = getUserIdFromToken();
-                const response = await api.get(`user/${userId}`)
-                this.novoUsername = response.data.username;
-                this.novaBiografia = response.data.description;
-                if(response.data.profilePictureUrl == null){
-                  response.data.profilePictureUrl = "@/assets/icon.png"
-                }
-                this.ProfilePicture = response.data.profilePictureUrl;
+                const [userResponse, gruposResponse] = await Promise.all([
+                api.get(`user/${userId}`),
+                api.get(`user/groups/${userId}`) 
+                ]);
+                this.novoUsername = userResponse.data.username;
+                this.novaBiografia = userResponse.data.description;
+                this.ProfilePicture = userResponse.data.profilePictureUrl || require('@/assets/icon.png');
+                this.grupos = gruposResponse.data || [];
+
               }catch(error){
                 this.error = 'Buscar perfil falhou: ' + (error.response?.data?.message || error.message);
               }
+            },
+            verGrupo(grupoId) {
+              this.$router.push(`/grupo/${grupoId}`);
             },
             async MudarFoto(){
               const userId = getUserIdFromToken();
@@ -126,6 +151,48 @@ import { getUserIdFromToken } from '@/utils/auth';
             }
             this.imagemSelecionada = file;
         },
+              irParaPagina(pagina) {
+          if (pagina > 0 && pagina <= this.totalPages) {
+            this.currentPage = pagina;
+            this.carregarAtividades();
+          }
+        },
+        async carregarAtividades(){
+          this.isLoading = true;
+          try {
+            console.log(`Buscando atividades - Página: ${this.currentPage}`);
+            const response = await api.get('/Activity', {
+              params: {
+                pageNumber: this.currentPage,
+                pageSize: this.pageSize
+              }
+            });
+            console.log("Resposta da API:", response.data);
+            const eRespostaPaginada = response.data && typeof response.data === 'object' && Array.isArray(response.data.items);
+
+            if (eRespostaPaginada) {
+              this.atividade = response.data.items;
+              this.totalPages = response.data.totalPages;
+            } 
+            else if (Array.isArray(response.data)) {
+              console.warn("A API não retornou um objeto paginado. Tratando a resposta como uma única página.");
+              this.atividade = response.data;
+              this.totalPages = 1;
+            } 
+            else {
+              console.error("Formato de resposta inesperado da API.");
+              this.atividade = [];
+              this.totalPages = 1;
+            }
+
+          } catch (error) {
+            console.error('Erro detalhado ao buscar atividades:', error);
+            alert('Houve um erro ao buscar as atividades. Verifique o console (F12) para mais detalhes.');
+            this.atividade = []; 
+          } finally {
+            this.isLoading = false;
+          }
+        },
   },
         data(){
           return{
@@ -135,16 +202,33 @@ import { getUserIdFromToken } from '@/utils/auth';
             atividade: [],
             ProfilePicture:null,
             imagemSelecionada:null,
+            currentPage: 1,
+            grupos: [],
+            totalPages: 1,
+            pageSize: 10,
           }
         },
-    async created() {
-    try {
+        computed:{
+      paginas() {
+        const paginasVisiveis = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(paginasVisiveis / 2));
+        let endPage = startPage + paginasVisiveis - 1;
+
+        if (endPage > this.totalPages) {
+          endPage = this.totalPages;
+          startPage = Math.max(1, endPage - paginasVisiveis + 1);
+        }
+
+        const pages = [];
+        for (let i = startPage; i <= endPage; i++) {
+          pages.push(i);
+        }
+        return pages;
+      },
+    },
+    created() {
       this.Profile();
-      const response = await api.get('/Activity');
-        this.atividade = response.data.items;
-    } catch (error) {
-      console.error('Erro ao buscar atividades do usuário:', error.message);
-    }
+      this.carregarAtividades();
   }
 }
 </script>
@@ -395,5 +479,153 @@ h3 {
 .btn-salvar:hover,
 .btn-cancelar:hover {
   filter: brightness(0.9);
+}
+.profile-avatar-btn {
+  
+  background-color: var(--button-default-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 8px; 
+  cursor: pointer;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  gap: 8px;
+}
+
+.btn-paginacao {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  background-color: var(--button-default-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-paginacao:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-paginacao.pagina-atual {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text-color);
+  border-color: var(--button-primary-bg);
+  font-weight: bold;
+}
+.secao-grupos {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.secao-atividades {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.lista-grupos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 15px;
+}
+
+.cartao-grupo {
+  width: 130px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--body-bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.cartao-grupo:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.grupo-imagem {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 2px solid var(--border-color);
+}
+
+.grupo-nome {
+  font-size: 0.9em;
+  font-weight: bold;
+  color: var(--text-color);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .profile-page-container {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .profile-header {
+    padding-bottom: 15px;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  .lista-grupos {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .cartao-grupo {
+    width: 100px;
+  }
+  
+  .grupo-imagem {
+    width: 60px;
+    height: 60px;
+  }
+
+  .grid-activities {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-profile-popup-content {
+    padding: 15px;
+  }
+
+  .edit-form-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .edit-form-footer .btn-salvar,
+  .edit-form-footer .btn-cancelar {
+    width: 100%;
+  }
+
+  .paginacao {
+    flex-wrap: wrap; 
+    gap: 5px;
+  }
 }
 </style>

@@ -13,13 +13,12 @@
 </template>
 
 <script>
-import Homepage from './Homepage.vue';
 
 export default {
   name: 'ServerError',
   methods: {
     irParaHome() {
-      this.$router.push({ name:Homepage});
+      this.$router.push({ name:'Homepage'});
     },
     recarregarPagina() {
       window.location.reload();
@@ -97,5 +96,24 @@ export default {
 
 .btn-primary:hover, .btn-default:hover {
   filter: brightness(0.9);
+}
+@media (max-width: 480px) {
+  .error-card {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .error-title {
+    font-size: 2.5em;
+  }
+
+  .error-message {
+    font-size: 1.2em;
+  }
+
+  .btn-primary, .btn-default {
+    width: 100%;
+    font-size: 1em;
+  }
 }
 </style>

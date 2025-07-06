@@ -11,7 +11,7 @@
 </template>
 
 <script> 
-import RecSenha from './RecSenha.vue'
+import RecSenha from './TelaLink.vue'
 import axios from 'axios'
 export default{
     name : 'Login',
@@ -125,5 +125,13 @@ export default{
 .link-forgot-password:hover {
     color: var(--text-color-secondary); 
     text-decoration: none;
+}
+@media (max-width: 480px) {
+  .login-container {
+    max-width: 100%;
+    padding: 20px 15px;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 </style>

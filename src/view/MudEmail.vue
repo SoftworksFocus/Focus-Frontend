@@ -11,12 +11,11 @@
 </template>
 
 <script>
-import Config from './Config.vue';
     export default{
         name:'MudEmail',
         methods:{
             Voltar(){
-             this.$router.push({name:Config})
+             this.$router.push({name:'Config'})
             }
     }
 }
@@ -94,5 +93,18 @@ import Config from './Config.vue';
 }
 .btn-voltar:hover {
     filter: brightness(0.9);
+}
+@media (max-width: 480px) {
+  .recovery-container, .credentials-change-container {
+    padding: 20px 15px;
+    margin: 10px;
+    box-shadow: none; 
+    border-radius: 0;
+    max-width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
 }
 </style>
