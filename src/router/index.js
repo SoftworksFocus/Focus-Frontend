@@ -16,43 +16,43 @@ import{createRouter, createWebHistory} from 'vue-router'
 
 
 const routes=[
-    {name:PagInicial,
+    {name:'PagInicial',
     component:PagInicial,
     path:'/'
     },
-    {name:Cadastro,
+    {name:'Cadastro',
     component:Cadastro,
     path:'/cadastro'
     },
-    {name:Login,
+    {name:'Login',
     component:Login,
     path:'/login'
     },
-    {name:Perfil,
+    {name:'Perfil',
     component:Perfil,
     path:'/Perfil'    
     },
-    {name:Homepage,
+    {name:'Homepage',
     component:Homepage,
     path:'/homepage'    
     },
-    {name:RecSenha,
+    {name:'RecSenha',
     component:RecSenha,
     path:'/recsenha'    
     },
-    {name:Config,
+    {name:'Config',
     component:Config,
     path:'/config'    
     },
-    {name:MudEmail,
+    {name:'MudEmail',
     component:MudEmail,
     path:'/mudEmail'    
     },
-    {name:MudSenha,
+    {name:'MudSenha',
     component:MudSenha,
     path:'/mudSenha'    
     },
-    {name:Atividade,
+    {name:'Atividade',
     component:Atividade,
     path:'/atividade/:id',   
     },
@@ -60,7 +60,7 @@ const routes=[
     component: ServerError,
     path: '/erro-servidor'
     },
-    {name:'ExplorarGrupo',
+    {name:'ExplorarGrupos',
     component: ExplorarGrupo,
     path:'/explorarGrupos'
     },

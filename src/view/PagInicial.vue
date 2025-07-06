@@ -20,17 +20,15 @@ Mais conexões reais, menos rolagem sem sentido. Encontre seu grupo. Ou vários.
 </div>
 </template>
 <script>
-import Cadastro from '../view/Cadastro.vue'
-import Login from './Login.vue'
 export default{
     name : 'PagInicial',
 
 methods:{
     cadastro(){
-         this.$router.push({name:Cadastro})
+         this.$router.push({name:'Cadastro'})
     },
     login(){
-        this.$router.push({name:Login})
+        this.$router.push({name:'Login'})
     }
 }
 }
@@ -84,7 +82,7 @@ methods:{
 }
 .conteudo {
   display: flex;
-  background-color: white;
+  background-color: background-color;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   padding: 40px;

@@ -60,7 +60,7 @@ ul{
   list-style-type: none;
 }
 .activity-card {
-  background-color: var(--card-color);
+  background-color: background-color;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;

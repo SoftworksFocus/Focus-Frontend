@@ -10,9 +10,7 @@
     </div>
 </template>
 
-<script>
-import PagInicial from './PagInicial.vue' 
-import Homepage from './Homepage.vue'
+<script> 
 import RecSenha from './RecSenha.vue'
 import axios from 'axios'
 export default{
@@ -26,7 +24,7 @@ export default{
 },
     methods:{
         voltar(){
-            this.$router.push({name:PagInicial})
+            this.$router.push({name:'PagInicial'})
         },
         RecSenha(){
             this.$router.push({name:RecSenha})
@@ -40,7 +38,7 @@ export default{
             const token = response.data.accessToken;
             console.log(token);
             localStorage.setItem('authToken', token);
-            this.$router.push({name:Homepage});
+            this.$router.push({name:'Homepage'});
         }catch(error){
             this.erro = 'Login falhou:' + (error.response?.data?.message || error.message);
         }

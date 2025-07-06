@@ -1,16 +1,3 @@
-Olá, primo! Claro, você está certo. Faltou detalhar a tela GrupoDetalhe.vue, que é o destino final ao clicar em um dos cards.
-
-Criar uma boa página de detalhes do grupo é essencial para a experiência. Ela deve mostrar não apenas as informações do grupo, mas também suas atividades e membros.
-
-Vamos construir o componente GrupoDetalhe.vue do zero, com uma aparência profissional e as funcionalidades que você precisa.
-
-Passo 1: O Arquivo src/views/GrupoDetalhe.vue
-Crie este novo arquivo. Ele será responsável por buscar e exibir todas as informações de um grupo específico com base no ID recebido da URL.
-
-Cole este código completo no seu novo arquivo:
-
-HTML
-
 <template>
   <div class="page-container">
     <button @click="$router.back()" class="btn-voltar">← Voltar</button>

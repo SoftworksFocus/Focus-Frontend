@@ -2,9 +2,9 @@
      <div class="profile-page-container">
       <button class="btn-voltar" @click="Voltar">Voltar</button>
         <div class="profile-header">
-          <BotaoGenerico @toggle="Edit" class="profile-avatar-btn">
+          <button @toggle="Edit" class="profile-avatar-btn">
           <img :src='ProfilePicture' alt="Avatar" class="profile-avatar" />
-          </BotaoGenerico>
+          </button>
             <h1>{{novoUsername}}</h1>
             <p class="user-bio">{{novaBiografia}}</p>
             <div class="profile-stats">
@@ -52,7 +52,6 @@
 import AtividadePerfil from '../components/AtividadePerfil.vue'
 import api from '../api'
 import BotaoGenerico from '@/components/botaoGenerico.vue';
-import Homepage from './Homepage.vue';
 import AtividadeDetalhes from './AtividadeDetalhes.vue';
 import { getUserIdFromToken } from '@/utils/auth';
     export default{
@@ -60,7 +59,7 @@ import { getUserIdFromToken } from '@/utils/auth';
         components:{AtividadePerfil, BotaoGenerico},
            methods:{
             Voltar(){
-             this.$router.push({name:Homepage})
+             this.$router.push({name:'Homepage'})
             },
             async Profile(){
               try{

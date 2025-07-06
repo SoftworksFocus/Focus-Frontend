@@ -18,11 +18,6 @@
       <p>Carregando...</p>
     </div>
 
-    <div v-if="hasNextCursor && !isLoading" class="load-more-container">
-      <button @click="loadMoreActivities" class="btn-load-more">
-        Carregar Mais
-      </button>
-    </div>
   </div>
 </template>
 
@@ -45,10 +40,22 @@ export default {
     components:{atividade},
     mounted() {
     this.loadMoreActivities();
+    window.addEventListener('scroll', this.handleScroll);
 },
+ beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   methods:{
     Atividade(){
       this.$router.push({name:AtividadeDetalhes})
+    },
+    handleScroll() {
+      if (this.isLoading || !this.hasNextCursor) return;
+      const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200;
+
+      if (nearBottom) {
+        this.loadMoreActivities();
+      }
     },
     async loadMoreActivities() {
       const userId = getUserIdFromToken();

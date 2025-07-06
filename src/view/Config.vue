@@ -16,9 +16,6 @@
 
 <script>
 import themeCheckbox from '@/components/themeCheckbox.vue';
-import MudEmail from './MudEmail.vue';
-import MudSenha from './MudSenha.vue';
-import Homepage from './Homepage.vue';
 export default{
     name:'Config',
     components:{themeCheckbox,},
@@ -29,13 +26,13 @@ export default{
     },
     methods:{
         MudEmail(){
-            this.$router.push({name:MudEmail})
+            this.$router.push({name:'MudEmail'})
         },
         MudSenha(){
-            this.$router.push({name:MudSenha})
+            this.$router.push({name:'MudSenha'})
         },
         Voltar(){
-            this.$router.push({name:Homepage})
+            this.$router.push({name:'Homepage'})
         },
     }
 
