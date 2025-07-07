@@ -30,7 +30,6 @@
 </template>
 
 <script>
-
 import { formatarDataParaExibicao } from '@/utils/auth';
 export default {
   name: 'atividade',

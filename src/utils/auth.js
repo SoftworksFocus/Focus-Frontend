@@ -11,6 +11,7 @@ export function formatarDataParaExibicao(dateString) {
   try {
     const data = parse(dateString, 'dd/MM/yyyy HH:mm', new Date(), { locale: ptBR });
      return format(data, "dd 'de' MMM 'de' yyyy, HH:mm", { locale: ptBR });
+
   } catch (error) {
     console.error(`Erro ao formatar a data "${dateString}":`, error);
     return 'Data inválida';
