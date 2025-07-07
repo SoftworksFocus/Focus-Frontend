@@ -70,7 +70,7 @@
 <script>
 import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
 import api from '../api';
-import { getUserIdFromToken } from '@/utils/auth';
+import { getLoggedInUsername } from '@/utils/auth';
 export default {
     name:'AtividadeDetalhes',
   data() {
@@ -162,12 +162,13 @@ export default {
     }
   },
    computed: {
-    isOwner() {
-      if (!this.atividade || !this.atividade.user) {
+isOwner() {
+
+      if (!this.atividade || !this.atividade.user || !this.atividade.user.username) {
         return false;
       }
-      const loggedInUserId = getUserIdFromToken();
-      return String(loggedInUserId) === String(this.atividade.user.id);
+      const loggedInUsername = getLoggedInUsername();
+      return loggedInUsername === this.atividade.user.username;
     }
   },
 };
