@@ -9,6 +9,8 @@ import NotFound from '@/view/NotFound.vue'
 import ServerError from '@/view/ServerError.vue'
 import ExplorarGrupo from '@/view/ExplorarGrupo.vue'
 import GrupoDetalhe from '@/view/GrupoDetalhe.vue'
+import MudEmail from '@/view/MudEmail.vue'
+import MudSenha from '@/view/MudSenha.vue'
 import{createRouter, createWebHistory} from 'vue-router'
 
 
@@ -36,6 +38,14 @@ const routes=[
     {name:'Config',
     component:Config,
     path:'/config'    
+    },
+    {name:MudSenha,
+    component:MudSenha,
+    path:'/mudSenha'    
+    },
+    {name:MudEmail,
+    component:MudEmail,
+    path:'/mudEmail'    
     },
     {name:'Atividade',
     component:Atividade,

@@ -72,7 +72,7 @@
 import AtividadePerfil from '../components/AtividadePerfil.vue'
 import api from '../api'
 import AtividadeDetalhes from './AtividadeDetalhes.vue';
-import { getUserIdFromToken, getLoggedInUsername } from '@/utils/auth';
+import { getUserIdFromToken} from '@/utils/auth';
 import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
     export default{
         name:'Perfil',
@@ -169,12 +169,12 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
         },
         async carregarAtividades(){
           this.isLoading = true;
-          const usernameOwner = getLoggedInUsername();
+          const userId = getUserIdFromToken();
           try {
             console.log(`Buscando atividades - Página: ${this.currentPage}`);
             const response = await api.get('/api/Activity', {
               params: {
-                ownerUsername: usernameOwner,
+                ownerIdFilter: userId,
                 pageNumber: this.currentPage,
                 pageSize: this.pageSize
               }
