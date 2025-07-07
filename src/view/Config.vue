@@ -29,10 +29,10 @@ export default{
     },
     methods:{
         MudEmail(){
-            this.$router.push({name:'TelaLink'})
+            this.$router.push({name:'MudEmail'})
         },
         MudSenha(){
-            this.$router.push({name:'TelaLink'})
+            this.$router.push({name:'Mudsenha'})
         },
         Voltar(){
             this.$router.push({name:'Homepage'})

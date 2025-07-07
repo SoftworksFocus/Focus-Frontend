@@ -218,7 +218,7 @@ export default {
                 const formData = new FormData();
                 formData.append('File', file);
 
-                return api.post(`/Activity/${atividadeId}/upload-media`, formData, {
+                return api.post(`/api/Activity/${atividadeId}/upload-media`, formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             });
