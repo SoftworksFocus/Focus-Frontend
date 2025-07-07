@@ -3,7 +3,6 @@ import Cadastro from '../view/Cadastro.vue'
 import Login from '../view/Login.vue'
 import Perfil from '../view/Perfil.vue'
 import Homepage from '../view/Homepage.vue'
-import TelaLink from '@/view/TelaLink.vue'
 import Config from '@/view/Config.vue'
 import Atividade from '../view/AtividadeDetalhes.vue'
 import NotFound from '@/view/NotFound.vue'
@@ -33,10 +32,6 @@ const routes=[
     {name:'Homepage',
     component:Homepage,
     path:'/homepage'    
-    },
-    {name:'TelaLink',
-    component:TelaLink,
-    path:'/telaLink'    
     },
     {name:'Config',
     component:Config,

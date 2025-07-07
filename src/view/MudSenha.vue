@@ -2,21 +2,46 @@
     <div class="credentials-change-container">
         <button class="btn-voltar" @click="Voltar">Voltar</button>
         <h3 class="change-title">Mudança de credenciais</h3>
+        <input type="text" v-model="email" placeholder="Email" class="change-input"/>
         <span>Coloque sua nova senha</span>
-        <input type="password" placeholder="*******" class="change-input"/>
+        <input type="password" v-model="novaSenha" placeholder="*******" class="change-input"/>
         <span>Confirme sua nova senha</span>
-        <input type="password" placeholder="*******" class="change-input"/>
-        <button class="btn-primary">Confirmar</button>
+        <input type="password" v-model="confirmaSenha" placeholder="*******" class="change-input"/>
+        <p> {{ erro }}</p>
+        <button @click="Confirmar" class="btn-primary">Confirmar</button>
     </div>
 </template>
 
 <script>
+import api from '@/api';
     export default{
         name:'MudSenha',
+        data(){
+            return{
+                email:"",
+                novaSenha:"",
+                confirmaSenha:"",
+                erro:""
+            }
+        },
         methods:{
             Voltar(){
              this.$router.push({name:'Config'})
-            }
+            },
+            async Confirmar(){
+                try{
+                    if(this.novaSenha !== this.confirmaSenha){
+                    this.erro = "As senhas precisam ser iguais" 
+                    }
+                    await api.post(`/api/Auth/reset-password`,{
+                        email:this.email,
+                        newPassword:this.novaSenha,
+                    })
+                    this.$router.push({name:'Config'})
+                }catch(error){
+                    this.erro = 'não foi possível mudar a senha'
+                }
+            },
         }
     }
 </script>

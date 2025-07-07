@@ -137,7 +137,7 @@ export default {
       try {
         const userId = getUserIdFromToken();
         if (userId) {
-          const response = await api.get(`/user/Groups/${userId}`);
+          const response = await api.get(`/api/user/Groups/${userId}`);
           this.grupos = response.data;
         }
       } catch (error) {
@@ -152,7 +152,7 @@ export default {
         }
         try {
             const userId = getUserIdFromToken();
-            const response = await api.post('/Group', {
+            const response = await api.post('/api/Group', {
                 name: this.novoGrupo.name,
                 description: this.novoGrupo.description,
                 ownerId: userId,
@@ -161,7 +161,7 @@ export default {
             if (this.novoGrupo.imageFile && novoGrupoId) {
           const formData = new FormData();
           formData.append('File', this.novoGrupo.imageFile);
-          await api.post(`/Group/${novoGrupoId}/profile-picture`, formData, {
+          await api.post(`/api/Group/${novoGrupoId}/profile-picture`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
           });
         }
@@ -178,7 +178,7 @@ export default {
         }
         try {
             const userId = getUserIdFromToken();
-            const response = await api.post('/Activity', {
+            const response = await api.post('/api/Activity', {
                 userId: userId,
                 title: this.novaAtividade.title,
                 description: this.novaAtividade.description,
@@ -240,9 +240,6 @@ export default {
   bottom: 30px;
   right: 30px;
   z-index: 1000;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
 }
 
 .fab-main {
@@ -257,6 +254,8 @@ export default {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s;
+  position: relative;
+  z-index: 1001;
 }
 
 .fab-main.is-open {
@@ -270,10 +269,13 @@ export default {
 }
 
 .fab-options {
+  position: absolute;
+  bottom: 75px; 
+  right: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 15px;
+  gap: 10px; 
 }
 
 .fab-option {
@@ -282,144 +284,38 @@ export default {
   border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: 20px;
-  margin-bottom: 10px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .fab-item-enter-active, .fab-item-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.2s ease-out;
 }
 .fab-item-enter-from, .fab-item-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(10px) scale(0.95);
 }
 
-
-.modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1002; }
 .modal-content { background: var(--card-bg); padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 .close-modal-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.8em; color: var(--text-color-secondary); cursor: pointer; }
 .modal-content h3 { margin-top: 0; margin-bottom: 20px; }
-.modal-input, .modal-textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 5px; background-color: var(--body-bg); color: var(--text-color); box-sizing: border-box; }
+.modal-input, .modal-textarea, select.modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 5px; background-color: var(--body-bg); color: var(--text-color); box-sizing: border-box; }
 .modal-textarea { resize: vertical; min-height: 100px; }
 .modal-actions { text-align: right; margin-top: 10px; }
 .error-message { color: #e74c3c; margin-top: 15px; text-align: center; }
 .btn-primary { padding: 10px 25px; border: none; border-radius: 25px; background: var(--button-primary-bg); color: var(--button-primary-text-color); font-size: 1em; cursor: pointer; }
-.add-image-btn {
-    background-color: var(--button-default-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 8px 15px;
-    color: var(--button-text-color);
-    cursor: pointer;
-    margin-bottom: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    width:25px;
-}
-.add-image-btn:hover {
-    filter: brightness(0.9);
-}
-.icon-add-image img{
-    width: 25px;
-    height: 25px;
-    filter: invert(var(--icon-filter-invert, 0));
-}
-.image-upload-section {
-  display: flex; 
-  align-items: center; 
-  gap: 15px; 
-  margin-bottom: 15px; 
-}
-caption-input {
-  flex-grow: 1; 
-  height: 40px;
-  padding: 0 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  background-color: var(--body-bg);
-  color: var(--text-color);
-}
-.btn-icon-media {
-  background: none;
-  border: 1px solid var(--border-color);
-  padding: 5px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: background-color 0.2s ease, border-color 0.3s ease;
-}
-
-.btn-icon-media:hover {
-  background-color: var(--button-default-bg);
-  border-color: var(--link-color);
-}
-
-.btn-icon-media img {
-  width: 24px;  
-  height: 24px;
-  filter: invert(var(--icon-filter-invert, 0)); 
-}
-.image-preview-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-  padding: 10px;
-  border: 1px dashed var(--border-color);
-  border-radius: 5px;
-}
-
-.image-preview-item {
-  position: relative;
-  width: 50px;
-  height: 50px;
-}
-
-.image-preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.btn-remove-image {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 20px;
-  height: 20px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1;
-}
-
-.btn-remove-image:hover {
-  background-color: #c0392b;
-}
-@media (max-width: 480px) {
-  .modal-content {
-    padding: 15px; 
-  }
-
-  .modal-content h3 {
-    font-size: 1.2em;
-  }
-}
+.image-upload-section { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+.caption-input { flex-grow: 1; height: 40px; padding: 0 10px; border: 1px solid var(--border-color); border-radius: 5px; background-color: var(--body-bg); color: var(--text-color); }
+.btn-icon-media { background: none; border: 1px solid var(--border-color); padding: 5px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease, border-color 0.3s ease; }
+.btn-icon-media:hover { background-color: var(--button-default-bg); border-color: var(--link-color); }
+.btn-icon-media img { width: 24px; height: 24px; filter: invert(var(--icon-filter-invert, 0)); }
+.image-preview-gallery { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; padding: 10px; border: 1px dashed var(--border-color); border-radius: 5px; }
+.image-preview-item { position: relative; width: 50px; height: 50px; }
+.image-preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+.btn-remove-image { position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; background-color: #e74c3c; color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; line-height: 1; }
+.btn-remove-image:hover { background-color: #c0392b; }
+@media (max-width: 480px) { .modal-content { padding: 15px; } .modal-content h3 { font-size: 1.2em; } }
 </style>

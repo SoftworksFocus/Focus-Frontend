@@ -63,7 +63,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await api.get(`/Feed/${userId}`, {
+        const response = await api.get(`/api/Feed/${userId}`, {
           params: {
             cursor: this.nextCursor, 
             pageSize: this.pageSize,

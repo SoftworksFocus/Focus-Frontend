@@ -11,8 +11,7 @@
 </template>
 
 <script> 
-import RecSenha from './TelaLink.vue'
-import axios from 'axios'
+import api from '@/api'
 export default{
     name : 'Login',
     data(){
@@ -27,11 +26,11 @@ export default{
             this.$router.push({name:'PagInicial'})
         },
         RecSenha(){
-            this.$router.push({name:RecSenha})
+            console.log("wip")
         },
         async autenticar(){
         try{
-            const response = await axios.post('http://localhost:5135/api/Auth/login',{
+            const response = await api.post('/api/Auth/login',{
              email: this.email,
              password: this.password,
             });
@@ -42,7 +41,20 @@ export default{
         }catch(error){
             this.erro = 'Login falhou:' + (error.response?.data?.message || error.message);
         }
-    }
+    },
+    applyTheme(){
+            if (this.isDark) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            }
+            console.log("themeCheckbox: applyTheme ativado. Tema:", this.isDark ? 'dark' : 'light');
+    },
+    },
+    created(){
+        this.applyTheme();
     }
 }
 </script>

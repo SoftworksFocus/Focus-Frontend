@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '@/api';
 export default{
     name : 'Cadastro', 
      data() {
@@ -33,7 +33,7 @@ export default{
                 return;
             }
             try{
-                const response = await axios.post("http://localhost:5135/api/User",{
+                const response = await api.post("/api/User",{
                     username:this.Username,
                     email:this.Email,
                     password:this.Senha,

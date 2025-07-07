@@ -41,7 +41,7 @@ export default{
             const userId = getUserIdFromToken();
              if (confirm('Tem certeza que deseja DELETAR esta conta? Esta ação é irreversível.')) {
             try{
-                await api.delete(`User/${userId}`)
+                await api.delete(`/api/User/${userId}`)
                 this.$router.push({name:'PagInicial'})
             }catch(error){
                 this.error = 'Erro ao deletar a conta'

@@ -142,7 +142,7 @@ export default {
     this.dropdownAberto = null;
     if (confirm(`Tem certeza que deseja tornar este membro um administrador?`)) {
       try {
-        await api.put(`User/toggle-admin/${grupoId}/${membroId}`);
+        await api.put(`/api/User/toggle-admin/${grupoId}/${membroId}`);
         alert('Membro promovido a administrador com sucesso.');
         this.carregarDetalhesDoGrupo();
       } catch (error) {
@@ -151,13 +151,23 @@ export default {
       }
     }
   },
+  applyTheme(){
+            if (this.isDark) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            }
+            console.log("themeCheckbox: applyTheme ativado. Tema:", this.isDark ? 'dark' : 'light');
+    },
 
   async banirMembro(membroId) {
     const grupoId = this.grupo.id;
     this.dropdownAberto = null;
     if (confirm(`Tem certeza que deseja banir este membro do grupo?`)) {
       try {
-        await api.delete(`/Group/${grupoId}/members/${membroId}`);
+        await api.delete(`/api/Group/${grupoId}/members/${membroId}`);
         alert('Membro banido com sucesso.');
         this.carregarDetalhesDoGrupo();
       } catch (error) {
@@ -168,7 +178,7 @@ export default {
   },
     async saveGroupChanges() {
       try {
-        const response = await api.put(`/Group/${this.editableGroup.id}`, {
+        const response = await api.put(`/api/Group/${this.editableGroup.id}`, {
           name: this.editableGroup.name,
           description: this.editableGroup.description,
         });
@@ -189,7 +199,7 @@ export default {
         return;
       }
       try {
-        await api.post(`/user/join/${grupoId}/${userId}`, {
+        await api.post(`/api/user/join/${grupoId}/${userId}`, {
           userId: userId,
         });
         alert(`Você entrou no grupo "${this.grupo.name}"!`);
@@ -208,7 +218,7 @@ export default {
       }
       if (confirm('Tem certeza que deseja sair deste grupo?')) {
         try {
-          await api.delete(`/User/leave/${grupoId}/${userId}`, {
+          await api.delete(`/api/User/leave/${grupoId}/${userId}`, {
             userId: userId,
           });
           alert(`Você saiu do grupo "${this.grupo.name}".`);
@@ -230,9 +240,9 @@ export default {
       }
       try {
         const [detalhesResponse, atividadesResponse, membrosResponse] = await Promise.all([
-          api.get(`/Group/${grupoId}`),
-          api.get('/activity', { params: { groupId: grupoId } }),
-          api.get(`/Group/${grupoId}/members`)
+          api.get(`/api/Group/${grupoId}`),
+          api.get('/api/activity', { params: { groupId: grupoId } }),
+          api.get(`/api/Group/${grupoId}/members`)
         ]);
 
         this.grupo = detalhesResponse.data;
@@ -250,7 +260,7 @@ export default {
       const grupoId = this.$route.params.id;
       if (confirm('Tem certeza que deseja DELETAR este grupo? Esta ação é irreversível.')) { 
       try{
-            await api.delete(`/Group/${grupoId}`)
+            await api.delete(`/api/Group/${grupoId}`)
             this.carregarDetalhesDoGrupo();
             this.$router.push({name:'ExplorarGrupo'})
         }catch(error){
@@ -283,6 +293,7 @@ export default {
   },
   created() {
     this.carregarDetalhesDoGrupo();
+    this.applyTheme();
   },
   mounted() {
   window.addEventListener('click', this.fecharDropdowns);

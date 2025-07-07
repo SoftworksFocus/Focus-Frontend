@@ -81,12 +81,22 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
             Voltar(){
              this.$router.push({name:'Homepage'})
             },
+            applyTheme(){
+            if (this.isDark) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
+            }
+            console.log("themeCheckbox: applyTheme ativado. Tema:", this.isDark ? 'dark' : 'light');
+    },
             async Profile(){
               try{
                 const userId = getUserIdFromToken();
                 const [userResponse, gruposResponse] = await Promise.all([
-                api.get(`user/${userId}`),
-                api.get(`user/groups/${userId}`) 
+                api.get(`/api/user/${userId}`),
+                api.get(`/api/user/groups/${userId}`) 
                 ]);
                 this.novoUsername = userResponse.data.username;
                 this.novaBiografia = userResponse.data.description;
@@ -105,7 +115,7 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
               try{   
               const formData = new FormData();
               formData.append('File', this.imagemSelecionada);
-              const response = await api.post(`/User/${userId}/profile-picture`, formData, {
+              const response = await api.post(`/api/User/${userId}/profile-picture`, formData, {
                 headers:{
                     'Content-Type': 'multipart/form-data',
                   }
@@ -122,7 +132,7 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
             async Salvar(){
               const userId = getUserIdFromToken(); 
               try{ 
-                  const response = await api.put(`user/${userId}`,{
+                  const response = await api.put(`/api/user/${userId}`,{
                   params :{
                     id: userId,
                   },
@@ -161,13 +171,12 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
           this.isLoading = true;
           try {
             console.log(`Buscando atividades - Página: ${this.currentPage}`);
-            const response = await api.get('/Activity', {
+            const response = await api.get('/api/Activity', {
               params: {
                 pageNumber: this.currentPage,
                 pageSize: this.pageSize
               }
             });
-            console.log("Resposta da API:", response.data);
             const eRespostaPaginada = response.data && typeof response.data === 'object' && Array.isArray(response.data.items);
 
             if (eRespostaPaginada) {
@@ -229,6 +238,7 @@ import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
     created() {
       this.Profile();
       this.carregarAtividades();
+      this.applyTheme();
   }
 }
 </script>

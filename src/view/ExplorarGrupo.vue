@@ -58,7 +58,7 @@ export default {
         },
         async carregarGrupos() {
             try {
-                const response = await api.get('/Group');
+                const response = await api.get('/api/Group');
                 this.grupos = response.data.items;
             } catch (error) {
                 console.error("Falha ao carregar grupos:", error);

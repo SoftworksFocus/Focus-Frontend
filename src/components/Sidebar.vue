@@ -1,8 +1,8 @@
 <template>
   <div>
     <button @click="toggleSidebar" class="sidebar-toggle-btn">
-      <img v-if="!isOpen" :src="require('@/assets/menu_icon.png')" alt="Menu" class="sidebar-btn"/>
-      <img v-else :src="require('@/assets/X_icon.png')" alt="Fechar Menu" class="sidebar-btn"/>
+      <img v-if="!isOpen" :src="require('@/assets/menu_icon.png')" alt="Menu" class="sidebar-toggle-icon"/>
+      <img v-else :src="require('@/assets/X_icon.png')" alt="Fechar Menu" class="sidebar-toggle-icon"/>
     </button>
 
     <transition name="slide">
@@ -61,8 +61,8 @@ export default {
 
 <style scoped>
 .sidebar-toggle-btn {
-  position: fixed; top: 20px; left: 20px; z-index: 1001;
-  background-color: var(--primary-color); 
+position: fixed; top: 20px; left: 20px; z-index: 1001;
+background-color: var(--primary-color); 
 color: white;
 border: none;
 border-radius: 50%; 
@@ -76,7 +76,11 @@ align-items: center;
 transition: background-color 0.3s ease;
 margin: 10px auto; 
 }
-
+.sidebar-toggle-icon {
+  width: 24px;
+  height: 24px;
+  filter: invert(var(--icon-filter-invert, 0));
+}
 .sidebar-toggle-button:hover {
 background-color: var(--primary-color-darker);
 }
