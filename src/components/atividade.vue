@@ -31,8 +31,7 @@
 
 <script>
 
-import { format } from 'date-fns'; 
-import ptBR from 'date-fns/locale/pt-BR'; 
+import { formatarDataParaExibicao } from '@/utils/dateUtils';
 export default {
   name: 'atividade',
   props: {
@@ -46,15 +45,9 @@ export default {
       if (!url) return false;
       return url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg');
     },
-    formatarData(data) {
-      if (!data) return 'Data não definida';
-      try {
-        return format(new Date(data), "dd 'de' MMM, HH:mm", { locale: ptBR });
-      } catch (error) {
-        console.error("Erro ao formatar data:", error);
-        return 'Data inválida';
-      }
-    }
+    formatarData(dataString) {
+      formatarDataParaExibicao(dataString);
+    },
   }
 };
 </script>

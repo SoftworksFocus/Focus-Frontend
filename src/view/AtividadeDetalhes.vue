@@ -70,7 +70,7 @@
 <script>
 import BotaoCriarFlutuante from '@/components/botaoCriarFlutuante.vue';
 import api from '../api';
-import { getLoggedInUsername } from '@/utils/auth';
+import { getLoggedInUsername, formatarDataParaExibicao} from '@/utils/auth';
 export default {
     name:'AtividadeDetalhes',
   data() {
@@ -86,8 +86,10 @@ export default {
     };
   },
   components:{BotaoCriarFlutuante},
-  async mounted() {
+  created(){
     this.applyTheme();
+  },
+  async mounted() {
     try {
       const idAtividade = this.$route.params.id;
       const res = await api.get(`/api/Activity/${idAtividade}`);
@@ -108,12 +110,7 @@ export default {
             console.log("themeCheckbox: applyTheme ativado. Tema:", this.isDark ? 'dark' : 'light');
     },
     formatarData(dataString) {
-      if (!dataString) return 'N/A';
-      const data = new Date(dataString);
-      return data.toLocaleString('pt-BR', {
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit'
-      });
+      formatarDataParaExibicao(dataString);
     },
     eVideo(url) {
       if(!url) return false;
@@ -162,7 +159,7 @@ export default {
     }
   },
    computed: {
-isOwner() {
+    isOwner() {
 
       if (!this.atividade || !this.atividade.user || !this.atividade.user.username) {
         return false;
